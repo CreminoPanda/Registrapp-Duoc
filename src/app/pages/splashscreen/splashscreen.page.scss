@@ -1,0 +1,23 @@
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #042c54;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+        max-width: 150px;
+        margin-bottom: 20px;
+    }
+
+    ion-spinner{
+        color: rgb(66, 0, 248);
+    }
+
+}

@@ -1,0 +1,22 @@
+ion-card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+ion-card {
+    margin-top: 25%;
+
+    ion-item {
+        margin-bottom: 1.5rem;
+    }
+}
+
+ion-button {
+    margin-top: 1.5rem;
+}
+
+p {
+    margin-top: 1rem;
+}
