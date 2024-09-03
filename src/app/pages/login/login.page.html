@@ -1,30 +1,30 @@
-<ion-header>
-
-</ion-header>
-
 <ion-content>
-  <ion-card>
-      <ion-card-header>
-        <ion-card-title>Bienvenido al sistema</ion-card-title>
-        <ion-card-subtitle>Ingrese credenciales</ion-card-subtitle>
-      </ion-card-header>
-    
-    <ion-card-content [formGroup]="loginForm">
-      <ion-item>
-        <ion-input formControlName="email" [(ngModel)]="emailValue" type="email" label="Ingrese Correo:" labelPlacement="floating" placeholder="correo@correo.cl"></ion-input>
-      </ion-item>
-      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('required')">El email es requerido!.</ion-text>
-      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('email')">El email es inválido!.</ion-text>
-      <ion-item>
-        <ion-input formControlName="password" [(ngModel)]="passValue" type="password" label="Ingrese Contraseña:" labelPlacement="floating" placeholder="Ej: 123456"></ion-input>
-      </ion-item>
-      <!-- los ion-text sirven para mostrar mensajes de validador de angular, -->
-      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida!.</ion-text>
-      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('minlength')">La contraseña debe tener 6 caracteres como minimo.</ion-text>
-      <p>No tienes una cuenta? <a (click)="navigateRegister()">Crea una!</a></p>
-      <ion-button (click)="login()" expand="full">Ingresar</ion-button>
-    </ion-card-content>
-  </ion-card>
-
+  
+  <div class="fondo">
+    <div>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Bienvenido al sistema</ion-card-title>
+          <ion-card-subtitle>Ingrese credenciales</ion-card-subtitle>
+        </ion-card-header>
+  
+          <ion-card-content [formGroup]="loginForm">
+            <ion-item>
+              <ion-input formControlName="email" [(ngModel)]="emailValue" type="email" label="Ingrese Correo:" labelPlacement="floating" placeholder="correo@correo.cl"></ion-input>
+            </ion-item>
+            <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('required')">El email es requerido!.</ion-text>
+            <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('email')">El email es inválido!.</ion-text>
+            <ion-item>
+              <ion-input formControlName="password" [(ngModel)]="passValue" type="password" label="Ingrese Contraseña:" labelPlacement="floating" placeholder="Ej: 123456"></ion-input>
+            </ion-item>
+            <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida!.</ion-text>
+            <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('minlength')">La contraseña debe tener 6 caracteres como minimo.</ion-text>
+            <p>No tienes una cuenta? <a (click)="navigateRegister()">Crea una!</a></p>
+            <ion-button (click)="login()" expand="full">Ingresar</ion-button>
+          </ion-card-content>
+      </ion-card>
+    </div>
+    <img src="assets/icon/fotos/logo_duoc.png" alt="">
+  </div>
 </ion-content>
 
