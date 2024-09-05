@@ -41,14 +41,10 @@ export class LoginPage implements OnInit {
         message: 'Cargando......',
         duration: 2000
       });
-
       await loading.present();
-
       localStorage.setItem('usuarioLogin', JSON.stringify(user));
-
       setTimeout(async() => {
         await loading.dismiss();
-
         if (user.tipo === 'admin') {
           this.router.navigate(['/admin-dashboard']);
         } else if (user.tipo === 'usuario') {
@@ -58,7 +54,6 @@ export class LoginPage implements OnInit {
         }
       }, 2000);
       
-
     } else {
       const alert = await this.alertController.create({
         header: 'Acceso denegado',
@@ -67,7 +62,6 @@ export class LoginPage implements OnInit {
       });
       await alert.present();
     }
-
     
   }
 }
