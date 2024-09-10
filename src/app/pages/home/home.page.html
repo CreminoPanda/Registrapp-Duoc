@@ -1,35 +1,42 @@
-<ion-content>
-  <ion-card>
-    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-    <ion-card-header>
-      <ion-card-title>Card Title</ion-card-title>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      Here's a small text description for the card content. Nothing more, nothing less.
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-    <ion-card-header>
-      <ion-card-title>Card Title</ion-card-title>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      Here's a small text description for the card content. Nothing more, nothing less.
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-    <ion-card-header>
-      <ion-card-title>Card Title</ion-card-title>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      Here's a small text description for the card content. Nothing more, nothing less.
-    </ion-card-content>
-  </ion-card>
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="intro">
+    <strong>Bienvenido a RegistrAPP</strong>
+    <p>Desde esta aplicación podrás escanear un Código QR provisto por tu docente para registrar tu asistencia a clases.
+    </p>
+
+    <p>Si eres docente, podrás generar un Código QR vinculado a la clase actual para que tus alumnos puedan escanearlo y
+      registrar su asistencia.</p>
+  </div>
+
+  <div class="banner">
+    <strong>Accede para usar esta aplicación:</strong>
+    <ion-button class="btn-login" routerLink="/login" routerDirection="forward" expand="block">Iniciar
+      sesión</ion-button>
+  </div>
+
+  <div class="banner">
+    <strong>Si no tienes cuenta registrarte aquí:</strong>
+    <ion-button class="btn-register" routerLink="/registrar" routerDirection="forward"
+      expand="block">Registrarse</ion-button>
+  </div>
+
+  <div class="banner">
+    <strong>¿Necesitas algo más?</strong>
+    <ion-button class="btn-primary" href="https://www.duoc.cl/" expand="block">
+      <ion-icon name="globe-outline" slot="end"></ion-icon>Ir a Duoc.cl
+    </ion-button>
+
+    <ion-button class="btn-secondary" href="https://experienciavivo.duoc.cl/" expand="block">
+      <ion-icon name="school-outline" slot="end"></ion-icon>Ir a Vivo Duoc
+    </ion-button>
+
+    <ion-button class="btn-secondary" href="https://campusvirtual.duoc.cl/webapps/login/" expand="block">
+      <ion-icon name="school-outline" slot="end"></ion-icon>Ir a Blackboard
+    </ion-button>
+  </div>
 </ion-content>

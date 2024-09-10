@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AlertController, LoadingController, MenuController } from '@ionic/angular';
 import { UsuariosService } from 'src/app/services/usuario.service';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -17,7 +16,7 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup;
 
   constructor(private router: Router, private alertController: AlertController, private loadingController: LoadingController, private formBuilder: FormBuilder,
-    private usuarioService: UsuariosService, private menuController:MenuController
+    private usuarioService: UsuariosService, private menuController: MenuController
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -33,35 +32,34 @@ export class LoginPage implements OnInit {
     const email = this.emailValue;
     const pass = this.passValue;
     const aux = this.usuarioService.getUsuario();
-
     const user = aux.find(aux => aux.email === email && aux.pass === pass);
 
     if (user) {
       const loading = await this.loadingController.create({
-        message: 'Cargando......',
+        message: 'Cargando...',
         duration: 2000
       });
       await loading.present();
       localStorage.setItem('usuarioLogin', JSON.stringify(user));
-      setTimeout(async() => {
+      setTimeout(async () => {
         await loading.dismiss();
         if (user.tipo === 'admin') {
           this.router.navigate(['/admin-dashboard']);
         } else if (user.tipo === 'usuario') {
           this.router.navigate(['/usuario-dashboard']);
+        } else if (user.tipo === 'invitado') {
+          this.router.navigate(['/invitado-dashboard'])
         } else {
           this.router.navigate(['/home']);
         }
       }, 2000);
-      
     } else {
       const alert = await this.alertController.create({
         header: 'Acceso denegado',
-        message: 'Usuario o contraseña incorrectas!',
-        buttons: ['OK']
+        message: 'Credenciales Incorrectas',
+        buttons: ['Aceptar']
       });
       await alert.present();
     }
-    
   }
 }

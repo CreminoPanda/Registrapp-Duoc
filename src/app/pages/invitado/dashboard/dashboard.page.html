@@ -1,12 +1,21 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title></ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+    <div class="intro">
+        <strong>Bienvenido Alumno</strong>
+        <p>Estas listo para registrar tu asistencia!, solo debes solicitar a tu docente que genére el código QR para
+            poder escanearlo.</p>
+    </div>
 
-<ion-content>
-  <h1>ESTOY EN INVITADO</h1>
-  </ion-content>
+    <div class="banner">
+        <strong>Escanea ahora!:</strong>
+        <ion-button class="btn-scan" expand="block" routerLink="/qr">
+            <ion-icon name="qr-code-outline" slot="end"></ion-icon>Abrir Escáner QR
+        </ion-button>
+    </div>
+
+    <div class="banner">
+        <strong>¿Ya te vas?</strong>
+        <ion-button class="btn-logout" expand="block" routerLink="/">
+            <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
+        </ion-button>
+    </div>
+</ion-content>

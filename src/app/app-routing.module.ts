@@ -26,7 +26,19 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
-  }
+  },
+  {
+    path: 'admin-dashboard',
+    loadChildren: () => import('./pages/admin/dashboard/dashboard.module').then(m => m.DashboardPageModule)
+  },
+  {
+    path: 'usuario-dashboard',
+    loadChildren: () => import('./pages/usuario/dashboard/dashboard.module').then(m => m.DashboardPageModule)
+  },
+  {
+    path: 'invitado-dashboard',
+    loadChildren: () => import('./pages/invitado/dashboard/dashboard.module').then(m => m.DashboardPageModule)
+  },
 ];
 
 @NgModule({

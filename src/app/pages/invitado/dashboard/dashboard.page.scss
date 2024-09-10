@@ -1,0 +1,45 @@
+ion-content {
+    --background: #ffffff; // Fondo blanco
+    --padding-top: 20px;
+
+    .intro {
+        padding: 20px;
+        text-align: center;
+
+        strong {
+            font-size: 1.5rem;
+            color: #003366; // Azul oscuro
+        }
+
+        p {
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #333;
+        }
+    }
+
+    .banner {
+        padding: 10px 20px;
+        text-align: center;
+
+        strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #003366; // Azul oscuro
+        }
+
+        // Estilo para el botón de Abrir Escáner QR
+        .btn-scan {
+            --background: #FFD700; // Amarillo
+            --color: #000;
+            --border-radius: 5px;
+        }
+
+        // Estilo para el botón de Cerrar sesión y salir
+        .btn-logout {
+            --background: #FF5733; // Rojo anaranjado
+            --color: #fff;
+            --border-radius: 5px;
+        }
+    }
+}

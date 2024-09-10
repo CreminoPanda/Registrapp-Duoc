@@ -8,7 +8,7 @@ export class UsuariosService {
   usuarios = [
     {'email':'admin@admin.cl','pass':'admin123','nombre':'matias','apellido':'navarrete','rut':'12123123-K','tipo':'admin'},
     {'email':'user@user.cl','pass':'user123','nombre':'matias','apellido':'navarrete','rut':'12123123-K','tipo':'usuario'},
-    {'email':'invi@invi.cl','pass':'invitado','nombre':'matias','apellido':'navarrete','rut':'12123123-K','tipo':'invitado'},
+    {'email':'jo.rojass@duocuc.cl','pass':'invitado','nombre':'José','apellido':'Rojas','rut':'12123123-K','tipo':'invitado'},
   ];
 
 
