@@ -39,6 +39,20 @@ const routes: Routes = [
     path: 'invitado-dashboard',
     loadChildren: () => import('./pages/invitado/dashboard/dashboard.module').then(m => m.DashboardPageModule)
   },
+  {
+    path: 'usuario-profesor',
+    loadChildren: () => import('./pages/usuario/profesor/profesor.module').then( m => m.ProfesorPageModule)
+  },
+  {
+    path: 'usuario-cursos',
+    loadChildren: () => import('./pages/usuario/cursos/cursos.module').then( m => m.CursosPageModule)
+  },  {
+    path: 'detalle-curso',
+    loadChildren: () => import('./pages/usuario/detalle-curso/detalle-curso.module').then( m => m.DetalleCursoPageModule)
+  },
+
+
+
 ];
 
 @NgModule({

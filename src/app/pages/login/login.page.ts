@@ -49,6 +49,8 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/usuario-dashboard']);
         } else if (user.tipo === 'invitado') {
           this.router.navigate(['/invitado-dashboard'])
+        } else if (user.tipo === 'profesor') {
+          this.router.navigate(['/usuario-profesor'])
         } else {
           this.router.navigate(['/home']);
         }

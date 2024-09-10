@@ -1,0 +1,14 @@
+<ion-content>
+    <ion-list>
+      <ion-item *ngFor="let alumno of alumnos">
+        <ion-label>
+            <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
+            <p>{{ alumno.correo }}</p>
+        </ion-label>
+        </ion-item>
+    </ion-list>
+    <ion-button (click)="generateQRCode()">Generar Código QR</ion-button>
+    <div *ngIf="qrCodeDataUrl" class="codigoQR">
+        <img [src]="qrCodeDataUrl" alt="QR Code">
+    </div>
+</ion-content>

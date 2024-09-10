@@ -1,0 +1,10 @@
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let aux of cursos" (click)="verCurso(aux.curso)">
+      <ion-avatar>
+        <img [src]="aux.imagen" alt="">
+      </ion-avatar>
+      <ion-label><h2>{{ aux.curso }}</h2></ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
