@@ -1,3 +1,16 @@
 ion-card {
     margin-top: 2rem;
 }
+
+.banner {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #fff;
+
+    .btn-logout {
+        --background: #FF5733; // Rojo anaranjado
+        --color: #fff;
+        --border-radius: 5px;
+    }
+
+}

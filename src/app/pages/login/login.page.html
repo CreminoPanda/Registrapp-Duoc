@@ -19,6 +19,7 @@
             <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida!.</ion-text>
             <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('minlength')">La contraseña debe tener 6 caracteres como minimo.</ion-text>
             <p>No tienes una cuenta? <a routerLink="/register">Crea una!</a></p>
+            <p>¿Olvidaste tu contraseña? <a routerLink="/olvide-contra">Recuperala!</a></p>
             <ion-button (click)="login()" expand="full">Ingresar</ion-button>
           </ion-card-content>
       </ion-card>

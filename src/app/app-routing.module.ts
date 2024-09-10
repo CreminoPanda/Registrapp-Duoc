@@ -50,6 +50,10 @@ const routes: Routes = [
     path: 'detalle-curso',
     loadChildren: () => import('./pages/usuario/detalle-curso/detalle-curso.module').then( m => m.DetalleCursoPageModule)
   },
+  {
+    path: 'olvide-contra',
+    loadChildren: () => import('./pages/olvide-contra/olvide-contra.module').then( m => m.OlvideContraPageModule)
+  },
 
 
 

@@ -1,0 +1,41 @@
+ion-card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+  
+ion-card {
+    ion-item {
+      margin-bottom: 1.5rem;
+    }
+}
+  
+ion-button {
+    margin-top: 1.5rem;
+}
+  
+p {
+    margin-top: 1rem;
+}
+  
+ion-content {
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+}
+
+.fondo {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #042c54;
+}
+  
+.fondo img {
+    width: 200px;
+    height: auto;
+}

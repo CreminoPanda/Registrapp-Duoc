@@ -1,0 +1,23 @@
+<ion-header>
+</ion-header>
+
+<ion-content>
+  <div class="fondo">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Ingrese su correo para recuperar su contraseña, le enviaremos un correo para realizar el cambio</ion-card-subtitle> <br>
+        <ion-card-title>Recuperar Contraseña</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content [formGroup]="recoverForm">
+        <ion-item>
+          <ion-input formControlName="email" [(ngModel)]="emailValue" type="email" label="Ingrese Correo:" labelPlacement="floating" placeholder="correo@correo.cl"></ion-input>
+        </ion-item>
+        <ion-text position="stacked" color="danger" *ngIf="recoverForm.get('email')?.hasError('required')">El email es requerido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="recoverForm.get('email')?.hasError('email')">El email es inválido!.</ion-text>
+        <ion-button (click)="recoverPassword()" expand="full">Recuperar</ion-button>
+      </ion-card-content>
+    </ion-card>
+    <img src="assets/icon/fotos/logo_duoc.png" alt="">
+  </div>
+</ion-content>

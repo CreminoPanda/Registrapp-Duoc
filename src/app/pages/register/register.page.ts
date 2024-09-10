@@ -52,6 +52,15 @@ export class RegisterPage implements OnInit {
       tipo: 'invitado'
     };
     this.usuarioService.addUsuario(aux);
+    const successAlert = await this.alertController.create({
+      header: 'Completado!',
+      message: 'Cuenta creada con éxito!',
+      buttons: ['OK']
+    });
+    await successAlert.present();
+
+    await successAlert.onDidDismiss();
+
     this.router.navigate(['/login']);
   }
 

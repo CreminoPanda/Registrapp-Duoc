@@ -1,41 +1,17 @@
-#container {
+.header {
     text-align: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    padding-top: 1rem;
 }
 
-#intro {
+.banner {
+    padding: 10px 20px;
     text-align: center;
-    margin-top: 15%;
-}
+    background-color: #fff;
 
-#intro strong {
-    font-size: 20px;
-    line-height: 26px;
+    .btn-logout {
+        --background: #FF5733; // Rojo anaranjado
+        --color: #fff;
+        --border-radius: 5px;
+    }
 
-}
-
-#intro p {
-    font-size: 15px;
-    margin: 1%;
-    line-height: 22px;
-}
-
-#banner {
-    text-align: center;
-    margin-top: 10%;
-}
-
-#banner img {
-    padding-left: 5;
-    padding-right: 5;
-    margin-top: 5%;
-}
-
-#footer {
-    margin-top: 90%;
-    padding-top: 90%;
 }

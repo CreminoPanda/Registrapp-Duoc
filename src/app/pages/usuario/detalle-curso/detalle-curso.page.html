@@ -1,4 +1,13 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
 <ion-content>
+    <ion-title class="titulo">Curso {{curso}}</ion-title>
     <ion-list>
       <ion-item *ngFor="let alumno of alumnos">
         <ion-label>
