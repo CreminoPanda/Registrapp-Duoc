@@ -13,7 +13,6 @@ export class QrPage implements OnInit {
   }
   handleQrCodeResult(result: string) {
     console.log('QR code result:', result);
-    // Aquí puedes manejar el resultado del QR code
   }
 
 }

@@ -155,7 +155,6 @@ export class RegisterPage implements OnInit {
         const uid = userCredential.user?.uid;
   
         if (uid) {
-          // Encriptar la contraseña
           const encryptedPass = CryptoJS.AES.encrypt(user.pass, 'your-secret-key').toString();
 
           const userData = {

@@ -38,17 +38,17 @@ export class UsuariosService {
 
   private generarRut(): string {
     const digitos = Math.floor(Math.random() * 100000000);
-    const dv = Math.floor(Math.random() * 10); // Simplificación para el dígito verificador
+    const dv = Math.floor(Math.random() * 10);
     return `${digitos}-${dv}`;
   }
 
   private generarCorreo(nombre: string, apellido: string, segundoApellido: string, tipo: string): string {
-    const nombrePart = nombre.substring(0, 4).toLowerCase();
-    const apellidoPart = apellido.toLowerCase();
+    const nombrePart = nombre
+    const apellidoPart = apellido
     const segundoApellidoPart = segundoApellido.charAt(0).toLowerCase();
     if (tipo === 'profesor') {
       return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@profesor.duoc.cl`;
-    } else {
+    } else {  
       return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@duocuc.cl`;
     }
   }
