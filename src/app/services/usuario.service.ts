@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import axios from 'axios';
 import { Usuario } from '../interfaces/usuario';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,24 +14,76 @@ export class UsuariosService {
     {'email':'profe@profe.cl','pass':'profe123','nombre':'José','apellido':'Rojas','rut':'12123123-K','tipo':'profesor'}
   ];
 
-  constructor() { }
+  constructor(private angularFirestore: AngularFirestore) { }
 
-  getUsuario(): Usuario[] {
-    return this.usuarios;
+  getUsuarios(): Observable<Usuario[]> {
+    return this.angularFirestore.collection<Usuario>('usuarios').valueChanges();
   }
 
   getUsuarioByNombre() {
-
+    // Implementar lógica para obtener usuario por nombre
   }
 
   addUsuario(usuario: Usuario) {
     this.usuarios.push(usuario);
   }
-  deleteUsuario(){
 
+  deleteUsuario() {
+    // Implementar lógica para eliminar usuario
   }
-  updateUsuario(){
 
+  updateUsuario() {
+    // Implementar lógica para actualizar usuario
+  }
+
+  private generarRut(): string {
+    const digitos = Math.floor(Math.random() * 100000000);
+    const dv = Math.floor(Math.random() * 10); // Simplificación para el dígito verificador
+    return `${digitos}-${dv}`;
+  }
+
+  private generarCorreo(nombre: string, apellido: string, segundoApellido: string, tipo: string): string {
+    const nombrePart = nombre.substring(0, 4).toLowerCase();
+    const apellidoPart = apellido.toLowerCase();
+    const segundoApellidoPart = segundoApellido.charAt(0).toLowerCase();
+    if (tipo === 'profesor') {
+      return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@profesor.duoc.cl`;
+    } else {
+      return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@duocuc.cl`;
+    }
+  }
+
+  private generarPassword(nombre: string): string {
+    return `${nombre.substring(0, 4).toLowerCase()}1234`;
+  }
+
+  private limpiarTexto(texto: string): string {
+    return texto.replace(/[^a-zA-Z]/g, '');
+  }
+
+  async getRandomUsers(count: number): Promise<Usuario[]> {
+    try {
+      const response = await axios.get(`https://randomuser.me/api/?results=${count}&nat=es`);
+      return response.data.results.map((user: any, index: number) => {
+        const tipo = index < 5 ? 'profesor' : 'alumno';
+        const nombre = this.limpiarTexto(user.name.first);
+        const apellido = this.limpiarTexto(user.name.last);
+        const email = this.generarCorreo(nombre, apellido, apellido, tipo);
+        const pass = this.generarPassword(nombre);
+        const rut = this.generarRut();
+        return {
+          email,
+          pass,
+          nombre,
+          apellido,
+          rut,
+          tipo
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
+    }
   }
 
 }

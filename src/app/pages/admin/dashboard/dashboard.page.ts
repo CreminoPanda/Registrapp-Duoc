@@ -13,6 +13,8 @@ export class DashboardPage implements OnInit {
   constructor(private usuariosService: UsuariosService) { }
 
   ngOnInit() {
-    this.usuarios = this.usuariosService.getUsuario();
+    this.usuariosService.getUsuarios().subscribe(data => {
+      this.usuarios = data;
+    });
   }
 }

@@ -65,8 +65,10 @@ export class LoginPage implements OnInit {
 
         if (userData.tipo === 'admin') {
           this.router.navigate(['/admin-dashboard']);
-        } else if (userData.tipo === 'usuario') {
-          this.router.navigate(['/usuario-dashboard']);
+        } else if (userData.tipo === 'alumno') {
+          this.router.navigate(['/invitado-dashboard']);
+        } else if (userData.tipo === 'profesor'){
+          this.router.navigate(['/usuario-profesor']);
         } else {
           this.router.navigate(['/home']);
         }
@@ -75,13 +77,6 @@ export class LoginPage implements OnInit {
 
     } 
    } catch (error) {
-    /* Swal.fire({
-      title: 'Error!',
-      text: 'Acceso denegado! credenciales no válidas.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-      heightAuto: false
-    }); */
     const Toast = Swal.mixin({
       toast: true,
       position: "bottom-end",
