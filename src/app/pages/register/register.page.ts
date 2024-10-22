@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
-import { Usuario } from 'src/app/interfaces/usuario';
-import { UsuariosService } from 'src/app/services/usuario.service';
+import { AuthService } from 'src/app/services/firebase/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -11,21 +11,26 @@ import { UsuariosService } from 'src/app/services/usuario.service';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  emailValue?: string;
-  passValue?: string;
-  nombreValue?: string;
-  apellidoValue?: string;
-  rutValue?: string;
-  registerForm: FormGroup;
 
-  constructor(private router: Router, private alertController: AlertController, 
-  private loadingController: LoadingController, private formBuilder: FormBuilder, private usuarioService: UsuariosService) { 
-    this.registerForm = this.formBuilder.group({
+  emailValue: string = '';
+  passValue: string = '';
+  nombreValue: string = '';
+  apellidoValue: string = '';
+  rutValue: string = '';
+  loginForm: FormGroup;
+
+  constructor(
+    private router: Router, 
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private firestore: AngularFirestore
+  ) {
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$')]],
-      apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$')]],
-      rut: ['', [Validators.required, Validators.pattern('^\\d{1,2}\\.\\d{3}\\.\\d{3}-[\\dkK]$')]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[A-Z]).{6,}$')]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      rut: ['', Validators.required]
     });
   }
 
@@ -33,35 +38,73 @@ export class RegisterPage implements OnInit {
   }
 
   async register() {
-    if (!this.registerForm.valid) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Por favor, completa todos los campos correctamente.',
-        buttons: ['OK']
+    if (this.loginForm.invalid) {
+      const alert = await Swal.fire({
+        title: 'Error',
+        text: 'Por favor, completa todos los campos correctamente.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false
       });
-      await alert.present();
       return;
     }
-  
-    const aux: Usuario = {
-      email: this.emailValue || '',
-      pass: this.passValue || '',
-      nombre: this.nombreValue || '',
-      apellido: this.apellidoValue || '',
-      rut: this.rutValue || '',
-      tipo: 'invitado'
-    };
-    this.usuarioService.addUsuario(aux);
-    const successAlert = await this.alertController.create({
-      header: 'Completado!',
-      message: 'Cuenta creada con éxito!',
-      buttons: ['OK']
-    });
-    await successAlert.present();
 
-    await successAlert.onDidDismiss();
+    try {
+      const usuario = await this.authService.register(this.emailValue, this.passValue);
+      const userCreado = usuario.user;
 
-    this.router.navigate(['/login']);
+      if (userCreado) {
+        const aux = {
+          uid: userCreado.uid,
+          email: userCreado.email,
+          pass: this.passValue,
+          nombre: this.nombreValue,
+          apellido: this.apellidoValue,
+          rut: this.rutValue,
+          tipo: 'usuario'
+        };
+
+        await this.firestore.collection('usuarios').doc(userCreado.uid).set(aux);
+
+        let timerInterval: any;
+        Swal.fire({
+          title: "Procesando!",
+          html: "Creando usuario...",
+          timer: 1500,
+          timerProgressBar: true,
+          heightAuto: false,
+          didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup()!.querySelector("b");
+            timerInterval = setInterval(() => {
+              timer!.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          }
+        }).then((result) => {
+          if (result.dismiss === Swal.DismissReason.timer) {
+            Swal.fire({
+              title: 'Éxito!',
+              text: 'Usuario creado correctamente!',
+              icon: 'success',
+              confirmButtonText: 'OK',
+              heightAuto: false
+            });
+            this.router.navigate(['/login']);
+          }
+        });
+      }
+
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'No se puede registrar el usuario!',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false
+      });
+    }
   }
-
 }

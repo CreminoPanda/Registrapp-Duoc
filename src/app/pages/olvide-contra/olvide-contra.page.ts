@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController} from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { UsuariosService } from 'src/app/services/usuario.service';
+import { AuthService } from 'src/app/services/firebase/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-olvide-contra',
@@ -11,11 +13,17 @@ import { UsuariosService } from 'src/app/services/usuario.service';
 })
 export class OlvideContraPage implements OnInit {
 
-  emailValue?: string;
+  emailValue: string = '';
   recoverForm: FormGroup;
 
   constructor(
-    private alertController: AlertController, private loadingController: LoadingController, private formBuilder: FormBuilder, private usuarioService: UsuariosService, private router: Router) {
+    private alertController: AlertController,
+    private loadingController: LoadingController,
+    private formBuilder: FormBuilder,
+    private usuarioService: UsuariosService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.recoverForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -24,37 +32,56 @@ export class OlvideContraPage implements OnInit {
   ngOnInit() {}
 
   async recoverPassword() {
-    const email = this.emailValue;
-    const aux = this.usuarioService.getUsuario();
-    const user = aux.find(aux => aux.email === email);
-
-    if (user) {
-      const loading = await this.loadingController.create({
-        message: 'Enviando correo...',
-        duration: 2000
-      });
-      await loading.present();
-      setTimeout(async () => {
-        await loading.dismiss();
-        const alert = await this.alertController.create({
-          header: 'Correo enviado',
-          message: 'Se ha enviado un correo para recuperar su contraseña.',
-          buttons: [{
-            text: 'Aceptar',
-            handler: () => {
-              this.router.navigate(['/login']);
-            }
-          }]
-        });
-        await alert.present();
-      }, 2000);
-    } else {
+    if (this.recoverForm.invalid) {
       const alert = await this.alertController.create({
-        header: 'Correo no encontrado',
-        message: 'El correo ingresado no está registrado.',
-        buttons: ['Aceptar']
+        header: 'Error',
+        message: 'Por favor, completa todos los campos correctamente.',
+        buttons: ['OK']
       });
       await alert.present();
+      return;
+    }
+
+    try {
+      await this.authService.recoveryPassword(this.emailValue);
+      let timerInterval: any;
+      Swal.fire({
+        title: "Procesando!",
+        html: "Enviando correo...",
+        timer: 1500,
+        timerProgressBar: true,
+        heightAuto: false,
+        didOpen: () => {
+          Swal.showLoading();
+          const timer = Swal.getPopup()!.querySelector("b");
+          timerInterval = setInterval(() => {
+            timer!.textContent = `${Swal.getTimerLeft()}`;
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        }
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+          Swal.fire({
+            title: 'Éxito!',
+            text: 'Correo enviado correctamente!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            heightAuto: false
+          }).then(() => {
+            this.router.navigate(['home']);
+          });
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'No se puede enviar el correo al usuario!',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false
+      });
     }
   }
 }

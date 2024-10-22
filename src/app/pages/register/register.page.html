@@ -8,37 +8,37 @@
         <ion-card-title>Registro</ion-card-title>
       </ion-card-header>
   
-      <ion-card-content [formGroup]="registerForm">
+      <ion-card-content [formGroup]="loginForm">
         <ion-item>
           <ion-input formControlName="email" [(ngModel)]="emailValue" type="email" label="Correo" labelPlacement="floating" placeholder="Ej: correo@correo.cl"></ion-input>
         </ion-item>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('email')?.hasError('required')">El email es requerido!.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('email')?.hasError('email')">El email es inválido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('required')">El email es requerido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('email')">El email es inválido!.</ion-text>
         
         <ion-item>
           <ion-input formControlName="password" [(ngModel)]="passValue" type="password" label="Contraseña" labelPlacement="floating" placeholder="Ej: contra123"></ion-input>
         </ion-item>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('password')?.hasError('required')">La contraseña es requerida!.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('password')?.hasError('minlength')">La contraseña debe tener 6 caracteres como mínimo.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('password')?.hasError('pattern')">La contraseña debe tener al menos una mayúscula.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('minlength')">La contraseña debe tener 6 caracteres como mínimo.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('password')?.hasError('pattern')">La contraseña debe tener al menos una mayúscula.</ion-text>
   
         <ion-item>
           <ion-input formControlName="nombre" [(ngModel)]="nombreValue" type="text" label="Nombre" labelPlacement="floating" placeholder="Ej: Alvaro"></ion-input>
         </ion-item>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('nombre')?.hasError('required')">El nombre es requerido!.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('nombre')?.hasError('pattern')">El nombre solo puede contener letras.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('nombre')?.hasError('required')">El nombre es requerido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('nombre')?.hasError('pattern')">El nombre solo puede contener letras.</ion-text>
   
         <ion-item>
           <ion-input formControlName="apellido" [(ngModel)]="apellidoValue" type="text" label="Apellido" labelPlacement="floating" placeholder="Ej: Sepulveda"></ion-input>
         </ion-item>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('apellido')?.hasError('required')">El apellido es requerido!.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('apellido')?.hasError('pattern')">El apellido solo puede contener letras.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('apellido')?.hasError('required')">El apellido es requerido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('apellido')?.hasError('pattern')">El apellido solo puede contener letras.</ion-text>
   
         <ion-item>
           <ion-input formControlName="rut" [(ngModel)]="rutValue" type="text" label="Rut" labelPlacement="floating" placeholder="Ej: 12.123.123-0"></ion-input>
         </ion-item>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('rut')?.hasError('required')">El rut es requerido!.</ion-text>
-        <ion-text position="stacked" color="danger" *ngIf="registerForm.get('rut')?.hasError('pattern')">El rut es inválido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('rut')?.hasError('required')">El rut es requerido!.</ion-text>
+        <ion-text position="stacked" color="danger" *ngIf="loginForm.get('rut')?.hasError('pattern')">El rut es inválido!.</ion-text>
         
         <p>¿Ya tienes una cuenta? <a routerLink="/login">Inicia Sesión!</a></p>
 

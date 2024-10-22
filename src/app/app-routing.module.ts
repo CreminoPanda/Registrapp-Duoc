@@ -54,6 +54,10 @@ const routes: Routes = [
     path: 'olvide-contra',
     loadChildren: () => import('./pages/olvide-contra/olvide-contra.module').then( m => m.OlvideContraPageModule)
   },
+  {
+    path: 'qr',
+    loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
+  },
 
 
 
