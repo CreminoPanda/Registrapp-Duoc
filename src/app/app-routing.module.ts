@@ -57,10 +57,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/olvide-contra/olvide-contra.module').then( m => m.OlvideContraPageModule)
   },
   {
-    path: 'qr',
-    loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
-  },
-  {
     path: 'actualizar-usuario/:uid',
     loadChildren: () => import('./pages/admin/actualizar/actualizar.module').then( m => m.ActualizarPageModule)
   },

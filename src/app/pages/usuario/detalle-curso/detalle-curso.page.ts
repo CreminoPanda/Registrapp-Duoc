@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlumnosService } from '../../../services/alumnos.service';
 import { Alumno } from '../../../interfaces/alumno';
-import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-detalle-curso',
@@ -23,15 +22,6 @@ export class DetalleCursoPage implements OnInit {
     }
   }
 
-  generateQRCode() {
-    const url = 'https://www.duoc.cl/';
-    QRCode.toDataURL(url, { errorCorrectionLevel: 'H', type: 'image/png' }, (err, url) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      this.qrCodeDataUrl = url;
-    });
-  }
+
 
 }

@@ -16,8 +16,4 @@
         </ion-label>
         </ion-item>
     </ion-list>
-    <ion-button (click)="generateQRCode()">Generar Código QR</ion-button>
-    <div *ngIf="qrCodeDataUrl" class="codigoQR">
-        <img [src]="qrCodeDataUrl" alt="QR Code">
-    </div>
 </ion-content>
