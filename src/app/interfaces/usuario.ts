@@ -5,4 +5,5 @@ export interface Usuario {
     apellido:string;
     rut:string;
     tipo:string;
+    uid:string;
 }

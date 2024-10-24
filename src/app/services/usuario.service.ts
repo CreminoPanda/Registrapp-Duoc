@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { Usuario } from '../interfaces/usuario';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,20 +20,33 @@ export class UsuariosService {
     return this.angularFirestore.collection<Usuario>('usuarios').valueChanges();
   }
 
-  getUsuarioByNombre() {
-    // Implementar lógica para obtener usuario por nombre
+  getUsuarioByUid(uid: string): Observable<Usuario> {
+    return this.angularFirestore.collection('usuarios').doc<Usuario>(uid).valueChanges().pipe(
+      map(usuario => {
+        if (!usuario) {
+          throw new Error('Usuario no encontrado');
+        }
+        return usuario;
+      })
+    );
   }
 
   addUsuario(usuario: Usuario) {
     this.usuarios.push(usuario);
   }
 
-  deleteUsuario() {
-    // Implementar lógica para eliminar usuario
+  deleteUsuario(uid: string): Promise<void> {
+    return this.angularFirestore.collection('usuarios').doc(uid).delete();
   }
 
-  updateUsuario() {
-    // Implementar lógica para actualizar usuario
+  updateUsuario(usuario: Usuario): Promise<void> {
+    return this.angularFirestore.collection('usuarios').doc(usuario.uid).update({
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      email: usuario.email,
+      rut: usuario.rut,
+      tipo: usuario.tipo
+    });
   }
 
   private generarRut(): string {

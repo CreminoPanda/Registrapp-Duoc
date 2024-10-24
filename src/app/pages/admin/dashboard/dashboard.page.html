@@ -11,6 +11,8 @@
         <h2>{{ usuario.nombre }} {{ usuario.apellido }}</h2>
         <p>Email: {{ usuario.email }}</p>
         <p>Tipo de usuario: {{ usuario.tipo }}</p>
+        <ion-button (click)="eliminarUsuario(usuario.uid)" color="danger">Eliminar</ion-button>
+        <ion-button (click)="irAActualizarUsuario(usuario.uid)">Actualizar Usuario</ion-button>
       </ion-label>
     </ion-item>
   </ion-list>

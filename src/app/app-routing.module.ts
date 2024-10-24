@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+
 const routes: Routes = [
   {
     path: '',
@@ -46,7 +47,8 @@ const routes: Routes = [
   {
     path: 'usuario-cursos',
     loadChildren: () => import('./pages/usuario/cursos/cursos.module').then( m => m.CursosPageModule)
-  },  {
+  },
+  {
     path: 'detalle-curso',
     loadChildren: () => import('./pages/usuario/detalle-curso/detalle-curso.module').then( m => m.DetalleCursoPageModule)
   },
@@ -57,6 +59,10 @@ const routes: Routes = [
   {
     path: 'qr',
     loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
+  },
+  {
+    path: 'actualizar-usuario/:uid',
+    loadChildren: () => import('./pages/admin/actualizar/actualizar.module').then( m => m.ActualizarPageModule)
   },
 
 
