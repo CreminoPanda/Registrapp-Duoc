@@ -28,9 +28,10 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
   },
+  
   {
     path: 'admin-dashboard',
-    loadChildren: () => import('./pages/admin/dashboard/dashboard.module').then(m => m.DashboardPageModule)
+    loadChildren: () => import('./pages/admin/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
   {
     path: 'usuario-dashboard',
@@ -60,6 +61,36 @@ const routes: Routes = [
     path: 'actualizar-usuario/:uid',
     loadChildren: () => import('./pages/admin/actualizar/actualizar.module').then( m => m.ActualizarPageModule)
   },
+  {
+    path: 'lista-usuarios',
+    loadChildren: () => import('./pages/admin/usuarios/lista-usuarios/lista-usuarios.module').then( m => m.ListaUsuariosPageModule)
+  },
+  {
+    path: 'usuarios',
+    loadChildren: () => import('./pages/admin/usuarios/usuarios/usuarios.module').then( m => m.UsuariosPageModule)
+  },  {
+    path: 'crear-asignatura',
+    loadChildren: () => import('./pages/admin/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule)
+  },
+  {
+    path: 'asignaturas',
+    loadChildren: () => import('./pages/admin/asignaturas/asignaturas.module').then( m => m.AsignaturasPageModule)
+  },
+  {
+    path: 'listar-asignaturas',
+    loadChildren: () => import('./pages/admin/listar-asignaturas/listar-asignaturas.module').then( m => m.ListarAsignaturasPageModule)
+  },
+  {
+    path: 'crear-seccion',
+    loadChildren: () => import('./pages/admin/crear-seccion/crear-seccion.module').then( m => m.CrearSeccionPageModule)
+  },
+  {
+    path: 'listar-seccion',
+    loadChildren: () => import('./pages/admin/listar-seccion/listar-seccion.module').then( m => m.ListarSeccionPageModule)
+  },
+
+
+
 
 
 

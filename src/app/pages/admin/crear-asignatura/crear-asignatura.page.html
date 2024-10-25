@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large">Crear Asignatura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="fondo">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Crear Asignatura</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
+        <form [formGroup]="asignaturaForm" (ngSubmit)="crearAsignatura()">
+          <ion-item>
+            <ion-input formControlName="nombre" type="text" label="Nombre de la Asignatura" labelPlacement="floating" placeholder="Ej: Matemáticas"></ion-input>
+          </ion-item>
+          <ion-text position="stacked" color="danger" *ngIf="asignaturaForm.get('nombre')?.hasError('required')">El nombre es requerido!.</ion-text>
+
+          <ion-button expand="block" type="submit" [disabled]="asignaturaForm.invalid">Crear Asignatura</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

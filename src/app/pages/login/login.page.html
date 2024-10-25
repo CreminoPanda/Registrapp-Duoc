@@ -1,15 +1,11 @@
-<ion-header [translucent]="true">
-
-</ion-header>
-
-<ion-content >
+<ion-content>
   <ion-card>
     <ion-card-header>
       <ion-card-title>Bienvenido al sistema</ion-card-title>
       <ion-card-subtitle>Ingrese credenciales:</ion-card-subtitle>
     </ion-card-header>
   
-    <ion-card-content [formGroup]="loginForm">
+    <ion-card-content [formGroup]="loginForm" class="formulario">
       <ion-item>
         <ion-input [(ngModel)]="emailValue" formControlName="email" type="email" label="Ingrese correo:" labelPlacement="floating" placeholder="Ej: admin@admin.cl"></ion-input>
       </ion-item>

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button expand="block" (click)="navigateToUserType('profesor')">
+    Profesores
+  </ion-button>
+  <ion-button expand="block" (click)="navigateToUserType('alumno')">
+    Alumnos
+  </ion-button>
+  <ion-button expand="block" (click)="navigateToUserType('admin')">
+    Admins
+  </ion-button>
+</ion-content>
+
+<div class="banner">
+  <strong>¿Ya te vas?</strong>
+  <ion-button class="btn-logout" expand="block" (click)="logout()">
+    <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
+  </ion-button>
+</div>
