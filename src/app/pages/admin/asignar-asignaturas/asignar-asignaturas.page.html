@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignar Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let asignatura of asignaturas">
+      <ion-label>{{ asignatura.nombre }}</ion-label>
+      <ion-checkbox slot="start" (ionChange)="toggleAsignatura(asignatura.uid)"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="secciones.length > 0">
+    <ion-item *ngFor="let seccion of secciones">
+      <ion-label>Sección {{ seccion.numero }}</ion-label>
+      <ion-checkbox slot="start" (ionChange)="toggleSeccion(seccion.seccionUid)"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-button expand="full" (click)="asignarAsignaturasYSecciones()">Asignar Asignaturas</ion-button>
+</ion-content>

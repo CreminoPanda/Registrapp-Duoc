@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlumnosService } from '../../../services/alumnos.service';
-import { Alumno } from '../../../interfaces/alumno';
+import { Alumno } from 'src/app/interfaces/alumno';
+import { AlumnosService } from 'src/app/services/alumnos.service';
 
 @Component({
   selector: 'app-detalle-curso',
@@ -9,19 +9,18 @@ import { Alumno } from '../../../interfaces/alumno';
   styleUrls: ['./detalle-curso.page.scss'],
 })
 export class DetalleCursoPage implements OnInit {
-  curso?: string | null;
+  seccion?: string | null;
   alumnos: Alumno[] = [];
   qrCodeDataUrl: string = '';
 
   constructor(private route: ActivatedRoute, private alumnosService: AlumnosService) {}
 
   ngOnInit() {
-    this.curso = this.route.snapshot.paramMap.get('curso');
-    if (this.curso) {
-      this.alumnos = this.alumnosService.getAlumno().filter(alumno => alumno.curso === this.curso);
+    this.seccion = this.route.snapshot.paramMap.get('seccion');
+    if (this.seccion) {
+      this.alumnosService.getAlumno().subscribe(alumnos => {
+        this.alumnos = alumnos.filter(alumno => alumno.seccion === this.seccion);
+      });
     }
   }
-
-
-
 }

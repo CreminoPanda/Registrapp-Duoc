@@ -32,4 +32,8 @@ export class ListaUsuariosPage implements OnInit {
   irAActualizarUsuario(uid: string) {
     this.router.navigate(['/actualizar-usuario', uid]);
   }
+
+  asignarAsignaturas(profesorUid: string) {
+    this.router.navigate(['/asignar-asignaturas', profesorUid]);
+  }
 }

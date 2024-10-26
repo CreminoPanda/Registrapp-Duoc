@@ -1,31 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { Router } from '@angular/router';
+import { AsignaturaService } from 'src/app/services/asignatura.service';
+import { Asignatura } from 'src/app/interfaces/asignatura'; 
+import { AuthService } from 'src/app/services/firebase/auth.service'; 
 
 @Component({
   selector: 'app-cursos',
   templateUrl: './cursos.page.html',
   styleUrls: ['./cursos.page.scss'],
 })
-
-
 export class CursosPage implements OnInit {
+  asignaturas: Asignatura[] = [];
+  profesorUid: string = ''; 
 
-  cursos = [
-    {curso:'Aplicaciones Moviles 010D', imagen:'/assets/icon/fotos/movil.png'},
-    {curso:'Aplicaciones Moviles 011D', imagen:'/assets/icon/fotos/movil.png'},
-    {curso:'Aplicaciones Moviles 012D', imagen:'/assets/icon/fotos/movil.png'},
-    {curso:'Aplicaciones Moviles 013D', imagen:'/assets/icon/fotos/movil.png'},
-    {curso:'Aplicaciones Moviles 014D', imagen:'/assets/icon/fotos/movil.png'}
-  ];
-
-  constructor(private router:Router) {}
+  constructor(
+    private router: Router,
+    private asignaturaService: AsignaturaService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
+    this.authService.isLogged().subscribe(user => {
+      if (user) {
+        this.profesorUid = user.uid;
+        this.obtenerAsignaturas();
+      }
+    });
   }
 
-  verCurso(curso: string){
-    this.router.navigate(['/detalle-curso', curso]);
+  obtenerAsignaturas() {
+    this.asignaturaService.listarAsignaturasPorProfesor(this.profesorUid).subscribe(asignaturas => {
+      this.asignaturas = asignaturas;
+    });
   }
 
+  verCurso(asignaturaUid: string) {
+    this.router.navigate(['/ver-secciones', asignaturaUid]);
+  }
 }

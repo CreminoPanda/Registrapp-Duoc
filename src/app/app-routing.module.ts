@@ -68,7 +68,8 @@ const routes: Routes = [
   {
     path: 'usuarios',
     loadChildren: () => import('./pages/admin/usuarios/usuarios/usuarios.module').then( m => m.UsuariosPageModule)
-  },  {
+  },
+  {
     path: 'crear-asignatura',
     loadChildren: () => import('./pages/admin/crear-asignatura/crear-asignatura.module').then( m => m.CrearAsignaturaPageModule)
   },
@@ -88,6 +89,23 @@ const routes: Routes = [
     path: 'listar-seccion',
     loadChildren: () => import('./pages/admin/listar-seccion/listar-seccion.module').then( m => m.ListarSeccionPageModule)
   },
+  {
+    path: 'generar-qr',
+    loadChildren: () => import('./pages/usuario/generar-qr/generar-qr.module').then( m => m.GenerarQrPageModule)
+  },
+  {
+    path: 'escanear-qr',
+    loadChildren: () => import('./pages/invitado/escanear-qr/escanear-qr.module').then( m => m.EscanearQrPageModule)
+  },
+  {
+    path: 'asignar-asignaturas/:profesorUid',
+    loadChildren: () => import('./pages/admin/asignar-asignaturas/asignar-asignaturas.module').then( m => m.AsignarAsignaturasPageModule)
+  },
+  {
+    path: 'ver-secciones/:asignaturaUid',
+    loadChildren: () => import('./pages/usuario/ver-secciones/ver-secciones.module').then( m => m.VerSeccionesPageModule)
+  },
+
 
 
 

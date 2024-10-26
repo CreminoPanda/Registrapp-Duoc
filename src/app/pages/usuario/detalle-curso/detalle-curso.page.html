@@ -1,19 +1,16 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-    </ion-toolbar>
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="titulo">Sección {{ seccion }}</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-title class="titulo">Curso {{curso}}</ion-title>
-    <ion-list>
-      <ion-item *ngFor="let alumno of alumnos">
-        <ion-label>
-            <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
-            <p>{{ alumno.correo }}</p>
-        </ion-label>
-        </ion-item>
-    </ion-list>
+  <ion-list>
+    <ion-item *ngFor="let alumno of alumnos">
+      <ion-label>
+        <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
+        <p>{{ alumno.rut }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

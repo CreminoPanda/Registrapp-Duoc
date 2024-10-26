@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlumnosService } from 'src/app/services/alumnos.service';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
 import Swal from 'sweetalert2';
+import { Alumno } from 'src/app/interfaces/alumno';
 
 @Component({
   selector: 'app-crear-seccion',
@@ -9,17 +11,23 @@ import Swal from 'sweetalert2';
   styleUrls: ['./crear-seccion.page.scss'],
 })
 export class CrearSeccionPage implements OnInit {
-
+  cupos: number | null = null;
+  alumnos: Alumno[] = [];
   asignaturaUid: string | null = null;
+  alumnosSeleccionados: string[] = [];
 
   constructor(
+    private alumnosService: AlumnosService,
     private asignaturaService: AsignaturaService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.asignaturaUid = this.route.snapshot.paramMap.get('asignaturaUid');
+    this.alumnosService.getAlumno().subscribe(alumnos => {
+      this.alumnos = alumnos;
+    });
   }
 
   async crearSeccion(cupos: string | number | null | undefined) {
@@ -49,9 +57,10 @@ export class CrearSeccionPage implements OnInit {
     if (this.asignaturaUid) {
       try {
         await this.asignaturaService.crearSeccion(this.asignaturaUid, cuposNumber);
+        await this.asignaturaService.asignarAlumnosASeccion(this.asignaturaUid, this.alumnosSeleccionados);
         Swal.fire({
           title: 'Éxito!',
-          text: 'Sección creada correctamente!',
+          text: 'Sección creada y alumnos asignados correctamente!',
           icon: 'success',
           confirmButtonText: 'OK',
           heightAuto: false
@@ -61,7 +70,7 @@ export class CrearSeccionPage implements OnInit {
       } catch (error) {
         Swal.fire({
           title: 'Error!',
-          text: 'No se puede crear la sección!',
+          text: 'No se puede crear la sección o asignar los alumnos!',
           icon: 'error',
           confirmButtonText: 'OK',
           heightAuto: false
@@ -75,6 +84,16 @@ export class CrearSeccionPage implements OnInit {
         confirmButtonText: 'OK',
         heightAuto: false
       });
+    }
+  }
+
+  // Método para manejar la selección de alumnos
+  toggleAlumno(alumnoUid: string) {
+    const index = this.alumnosSeleccionados.indexOf(alumnoUid);
+    if (index > -1) {
+      this.alumnosSeleccionados.splice(index, 1);
+    } else {
+      this.alumnosSeleccionados.push(alumnoUid);
     }
   }
 }

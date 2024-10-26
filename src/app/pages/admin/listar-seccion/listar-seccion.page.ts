@@ -24,7 +24,6 @@ export class ListarSeccionPage implements OnInit {
     if (this.asignaturaUid) {
       this.asignaturaService.listarSeccionesPorAsignatura(this.asignaturaUid).subscribe({
         next: (secciones: Seccion[]) => {
-          // Ordenar las secciones por el campo 'numero'
           this.secciones = secciones.sort((a, b) => a.numero - b.numero);
         },
         error: (error: any) => {

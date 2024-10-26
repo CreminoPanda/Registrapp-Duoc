@@ -18,6 +18,7 @@
         <p>Tipo de usuario: {{ usuario.tipo }}</p>
         <ion-button (click)="eliminarUsuario(usuario.uid)" color="danger">Eliminar</ion-button>
         <ion-button (click)="irAActualizarUsuario(usuario.uid)">Actualizar Usuario</ion-button>
+        <ion-button *ngIf="usuario.tipo === 'profesor'" (click)="asignarAsignaturas(usuario.uid)">Asignar Asignaturas</ion-button>
       </ion-label>
     </ion-item>
   </ion-list>
