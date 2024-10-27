@@ -7,6 +7,7 @@
     padding: 10px 20px;
     text-align: center;
     background-color: #fff;
+    color: #042c54;
 
     .btn-logout {
         --background: #FF5733; // Rojo anaranjado
@@ -18,4 +19,8 @@
 
 .btn {
     padding-top: 1rem;
+}
+
+.body{
+    --background: #fff;
 }

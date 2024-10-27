@@ -5,30 +5,55 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsuariosService {
   usuarios = [
-    {'email':'admin@admin.cl','pass':'admin123','nombre':'matias','apellido':'navarrete','rut':'12123123-K','tipo':'admin'},
-    {'email':'jo.rojass@duocuc.cl','pass':'invitado','nombre':'José','apellido':'Rojas','rut':'12123123-K','tipo':'invitado'},
-    {'email':'profe@profe.cl','pass':'profe123','nombre':'José','apellido':'Rojas','rut':'12123123-K','tipo':'profesor'}
+    {
+      email: 'admin@admin.cl',
+      pass: 'admin123',
+      nombre: 'matias',
+      apellido: 'navarrete',
+      rut: '12123123-K',
+      tipo: 'admin',
+    },
+    {
+      email: 'jo.rojass@duocuc.cl',
+      pass: 'invitado',
+      nombre: 'José',
+      apellido: 'Rojas',
+      rut: '12123123-K',
+      tipo: 'invitado',
+    },
+    {
+      email: 'profe@profe.cl',
+      pass: 'profe123',
+      nombre: 'José',
+      apellido: 'Rojas',
+      rut: '12123123-K',
+      tipo: 'profesor',
+    },
   ];
 
-  constructor(private angularFirestore: AngularFirestore) { }
+  constructor(private angularFirestore: AngularFirestore) {}
 
   getUsuarios(): Observable<Usuario[]> {
     return this.angularFirestore.collection<Usuario>('usuarios').valueChanges();
   }
 
   getUsuarioByUid(uid: string): Observable<Usuario> {
-    return this.angularFirestore.collection('usuarios').doc<Usuario>(uid).valueChanges().pipe(
-      map(usuario => {
-        if (!usuario) {
-          throw new Error('Usuario no encontrado');
-        }
-        return usuario;
-      })
-    );
+    return this.angularFirestore
+      .collection('usuarios')
+      .doc<Usuario>(uid)
+      .valueChanges()
+      .pipe(
+        map((usuario) => {
+          if (!usuario) {
+            throw new Error('Usuario no encontrado');
+          }
+          return usuario;
+        })
+      );
   }
 
   addUsuario(usuario: Usuario) {
@@ -37,16 +62,22 @@ export class UsuariosService {
 
   deleteUsuario(uid: string): Promise<void> {
     return this.angularFirestore.collection('usuarios').doc(uid).delete();
+    //update({
+    //isDisabled: true, // O puedes usar isActive: false
+    //});
   }
 
   updateUsuario(usuario: Usuario): Promise<void> {
-    return this.angularFirestore.collection('usuarios').doc(usuario.uid).update({
-      nombre: usuario.nombre,
-      apellido: usuario.apellido,
-      email: usuario.email,
-      rut: usuario.rut,
-      tipo: usuario.tipo
-    });
+    return this.angularFirestore
+      .collection('usuarios')
+      .doc(usuario.uid)
+      .update({
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email,
+        rut: usuario.rut,
+        tipo: usuario.tipo,
+      });
   }
 
   private generarRut(): string {
@@ -55,13 +86,18 @@ export class UsuariosService {
     return `${digitos}-${dv}`;
   }
 
-  private generarCorreo(nombre: string, apellido: string, segundoApellido: string, tipo: string): string {
-    const nombrePart = nombre
-    const apellidoPart = apellido
+  private generarCorreo(
+    nombre: string,
+    apellido: string,
+    segundoApellido: string,
+    tipo: string
+  ): string {
+    const nombrePart = nombre;
+    const apellidoPart = apellido;
     const segundoApellidoPart = segundoApellido.charAt(0).toLowerCase();
     if (tipo === 'profesor') {
       return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@profesor.duoc.cl`;
-    } else {  
+    } else {
       return `${nombrePart}.${apellidoPart}.${segundoApellidoPart}@duocuc.cl`;
     }
   }
@@ -76,7 +112,9 @@ export class UsuariosService {
 
   async getRandomUsers(count: number): Promise<Usuario[]> {
     try {
-      const response = await axios.get(`https://randomuser.me/api/?results=${count}&nat=es`);
+      const response = await axios.get(
+        `https://randomuser.me/api/?results=${count}&nat=es`
+      );
       return response.data.results.map((user: any, index: number) => {
         const tipo = index < 5 ? 'profesor' : 'alumno';
         const nombre = this.limpiarTexto(user.name.first);
@@ -90,7 +128,7 @@ export class UsuariosService {
           nombre,
           apellido,
           rut,
-          tipo
+          tipo,
         };
       });
     } catch (error) {
@@ -98,5 +136,4 @@ export class UsuariosService {
       throw error;
     }
   }
-
 }

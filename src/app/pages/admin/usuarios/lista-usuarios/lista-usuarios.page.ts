@@ -12,23 +12,32 @@ export class ListaUsuariosPage implements OnInit {
   usuarios: Usuario[] = [];
   tipo: string = '';
 
-  constructor(private route: ActivatedRoute, private usuariosService: UsuariosService, private router:Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private usuariosService: UsuariosService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.tipo = params['tipo'];
-      this.usuariosService.getUsuarios().subscribe(data => {
-        this.usuarios = data.filter(usuario => usuario.tipo === this.tipo);
+      this.usuariosService.getUsuarios().subscribe((data) => {
+        this.usuarios = data.filter((usuario) => usuario.tipo === this.tipo);
       });
     });
   }
 
   eliminarUsuario(uid: string) {
-    this.usuariosService.deleteUsuario(uid).catch(error => {
-      console.error('Error al eliminar usuario:', error);
-    });
+    this.usuariosService
+      .deleteUsuario(uid)
+      .then(() => {
+        console.log('Usuario deshabilitado');
+      })
+      .catch((error) => {
+        console.error('Error al deshabilitar usuario:', error);
+      });
   }
-  
+
   irAActualizarUsuario(uid: string) {
     this.router.navigate(['/actualizar-usuario', uid]);
   }
