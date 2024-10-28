@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./escanear-qr.page.scss'],
 })
 export class EscanearQrPage implements OnInit {
-
   qrValue = '';
   resultadoQR = '';
   constructor(
@@ -19,7 +18,7 @@ export class EscanearQrPage implements OnInit {
     private modalController: ModalController,
     private platform: Platform,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.platform.is('capacitor')) {
@@ -28,11 +27,10 @@ export class EscanearQrPage implements OnInit {
       BarcodeScanner.removeAllListeners();
     }
 
-    this.authServices.isLogged().subscribe(user => {
+    this.authServices.isLogged().subscribe((user) => {
       this.qrValue = user.uid;
     });
   }
-
 
   async openCamera() {
     const modal = await this.modalController.create({
@@ -41,22 +39,19 @@ export class EscanearQrPage implements OnInit {
       showBackdrop: false,
       componentProps: {
         formats: [],
-        LensFacing: LensFacing.Back
-      }
+        LensFacing: LensFacing.Back,
+      },
     });
 
     await modal.present();
 
-
     const { data } = await modal.onDidDismiss();
 
-
     if (data?.barcode?.displayValue) {
-
       this.resultadoQR = data.barcode.displayValue;
 
       setTimeout(() => {
-        this.router.navigate(['/invitado', this.resultadoQR]);
+        this.router.navigate(['/invitado-dashboard', this.resultadoQR]);
       }, 1000);
     }
   }

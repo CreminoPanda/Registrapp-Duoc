@@ -17,7 +17,6 @@ import {
 } from '@capacitor-mlkit/barcode-scanning';
 import { ModalController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-barcode-scanning',
   template: `
@@ -66,7 +65,8 @@ import { ModalController } from '@ionic/angular';
   ],
 })
 export class BarcodeScanningModalComponent
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Input()
   public formats: BarcodeFormat[] = [];
   @Input()
@@ -80,7 +80,7 @@ export class BarcodeScanningModalComponent
   constructor(
     private readonly ngZone: NgZone,
     private modalController: ModalController
-  ) { }
+  ) {}
 
   public ngOnInit(): void {
     BarcodeScanner.isTorchAvailable().then((result) => {
@@ -119,28 +119,28 @@ export class BarcodeScanningModalComponent
       this.squareElement?.nativeElement.getBoundingClientRect();
     const scaledRect = squareElementBoundingClientRect
       ? {
-        left: squareElementBoundingClientRect.left * window.devicePixelRatio,
-        right:
-          squareElementBoundingClientRect.right * window.devicePixelRatio,
-        top: squareElementBoundingClientRect.top * window.devicePixelRatio,
-        bottom:
-          squareElementBoundingClientRect.bottom * window.devicePixelRatio,
-        width:
-          squareElementBoundingClientRect.width * window.devicePixelRatio,
-        height:
-          squareElementBoundingClientRect.height * window.devicePixelRatio,
-      }
+          left: squareElementBoundingClientRect.left * window.devicePixelRatio,
+          right:
+            squareElementBoundingClientRect.right * window.devicePixelRatio,
+          top: squareElementBoundingClientRect.top * window.devicePixelRatio,
+          bottom:
+            squareElementBoundingClientRect.bottom * window.devicePixelRatio,
+          width:
+            squareElementBoundingClientRect.width * window.devicePixelRatio,
+          height:
+            squareElementBoundingClientRect.height * window.devicePixelRatio,
+        }
       : undefined;
     const detectionCornerPoints = scaledRect
       ? [
-        [scaledRect.left, scaledRect.top],
-        [scaledRect.left + scaledRect.width, scaledRect.top],
-        [
-          scaledRect.left + scaledRect.width,
-          scaledRect.top + scaledRect.height,
-        ],
-        [scaledRect.left, scaledRect.top + scaledRect.height],
-      ]
+          [scaledRect.left, scaledRect.top],
+          [scaledRect.left + scaledRect.width, scaledRect.top],
+          [
+            scaledRect.left + scaledRect.width,
+            scaledRect.top + scaledRect.height,
+          ],
+          [scaledRect.left, scaledRect.top + scaledRect.height],
+        ]
       : undefined;
     const listener = await BarcodeScanner.addListener(
       'barcodeScanned',
