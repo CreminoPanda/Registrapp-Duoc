@@ -68,7 +68,7 @@ export class BarcodeScanningModalComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input()
-  public formats: BarcodeFormat[] = [];
+  public formats: BarcodeFormat[] = [BarcodeFormat.QrCode]; // Asegúrate de incluir QR_CODE
   @Input()
   public lensFacing: LensFacing = LensFacing.Back;
 

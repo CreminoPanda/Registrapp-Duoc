@@ -117,3 +117,22 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+body.barcode-scanner-active {
+  visibility: hidden;
+  --background: transparent;
+  --ion-background-color: transparent;
+}
+
+.barcode-scanner-modal {
+  visibility: visible;
+  --background: transparent;
+  --ion-background-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  .barcode-scanner-modal {
+    --background: transparent;
+    --ion-background-color: transparent;
+  }
+}

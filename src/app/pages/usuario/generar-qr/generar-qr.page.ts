@@ -16,7 +16,7 @@ export class GenerarQrPage implements OnInit {
   asignaturaUid: string = '';
   seccionUid: string = '';
   qrCodeUrl: string = '';
-  alumnos: Alumno[] = [];
+  alumnos: Alumno[] = []; // Asegúrate de definir la propiedad alumnos
   claseEnCurso: boolean = false;
   asistenciaUid: string = '';
 
@@ -51,10 +51,6 @@ export class GenerarQrPage implements OnInit {
     };
 
     try {
-      this.alumnos.forEach((alumno) => {
-        asistencia.estudiantes[alumno.correo] = false;
-      });
-
       this.asistenciaUid = this.asistenciaService.createId();
       asistencia.uid = this.asistenciaUid;
       const qrData = JSON.stringify(asistencia);
@@ -81,8 +77,8 @@ export class GenerarQrPage implements OnInit {
       }
       console.log('Asistencia obtenida:', asistencia);
 
-      const alumnosPresentes = Object.values(asistencia.estudiantes).filter(
-        (presente) => presente
+      const alumnosPresentes = Object.keys(asistencia.estudiantes).filter(
+        (uid) => asistencia.estudiantes[uid]
       ).length;
       console.log('Alumnos presentes:', alumnosPresentes);
 

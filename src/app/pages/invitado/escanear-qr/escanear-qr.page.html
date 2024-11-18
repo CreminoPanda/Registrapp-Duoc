@@ -3,13 +3,13 @@
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title></ion-title>
+    <ion-title>Escanear QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <h1>USUARIO</h1>
-  <qr-code [value]="qrValue" size="190" errorCorrectionLevel="M" />
+  <qr-code [value]="qrValue" size="190" errorCorrectionLevel="M"></qr-code>
   <ion-button (click)="openCamera()">
     Scanear
     <ion-icon name="camera" slot="start"></ion-icon>
