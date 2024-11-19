@@ -150,10 +150,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'escanear-qr',
+    path: 'scanqr',
     loadChildren: () =>
-      import('./pages/invitado/escanear-qr/escanear-qr.module').then(
-        (m) => m.EscanearQrPageModule
+      import('./pages/invitado/scanqr/scanqr.module').then(
+        (m) => m.ScanqrPageModule
       ),
   },
   {
@@ -168,6 +168,27 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/usuario/ver-secciones/ver-secciones.module').then(
         (m) => m.VerSeccionesPageModule
+      ),
+  },
+  {
+    path: 'scanqr',
+    loadChildren: () =>
+      import('./pages/invitado/scanqr/scanqr.module').then(
+        (m) => m.ScanqrPageModule
+      ),
+  },
+  {
+    path: 'confirmar-asistencia',
+    loadChildren: () =>
+      import(
+        './pages/invitado/confirmar-asistencia/confirmar-asistencia.module'
+      ).then((m) => m.ConfirmarAsistenciaPageModule),
+  },
+  {
+    path: 'generar-qr',
+    loadChildren: () =>
+      import('./pages/usuario/generar-qr/generar-qr.module').then(
+        (m) => m.GenerarQrPageModule
       ),
   },
 ];

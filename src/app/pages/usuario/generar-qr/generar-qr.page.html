@@ -1,41 +1,11 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Generar QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Generar QR</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-button expand="full" (click)="iniciarClase()" [disabled]="claseEnCurso">
-    Iniciar Clase
-  </ion-button>
-  <ion-button
-    expand="full"
-    color="danger"
-    (click)="finalizarClase()"
-    [disabled]="!claseEnCurso"
-  >
-    Finalizar Clase
-  </ion-button>
-
-  <div *ngIf="qrCodeUrl">
-    <img [src]="qrCodeUrl" alt="QR Code" />
+<ion-content>
+  <div *ngIf="qrCode">
+    <img [src]="qrCode" alt="QR Code" />
   </div>
-
-  <ion-list>
-    <ion-item *ngFor="let alumno of alumnos">
-      <ion-label>
-        <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
-        <p>{{ alumno.rut }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
 </ion-content>
