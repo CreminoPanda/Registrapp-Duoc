@@ -1,23 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Listar Secciones</ion-title>
+    <ion-title>listar-seccion</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Listar Secciones</ion-title>
+      <ion-title size="large">listar-seccion</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <ion-list>
-    <ion-item *ngFor="let seccion of secciones">
-      <ion-label>
-        <h2>Sección {{ seccion.numero }}</h2>
-        <p>UID: {{ seccion.seccionUid }}</p>
-        <p>Cupos: {{ seccion.cupos }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
 </ion-content>

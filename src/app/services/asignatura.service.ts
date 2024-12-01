@@ -1,253 +1,167 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
-import { Asignatura } from 'src/app/interfaces/asignatura';
-import { Seccion } from 'src/app/interfaces/seccion';
-import { Alumno } from '../interfaces/alumno';
-import { MensajesService } from './mensajes.service';
+import { Asignatura } from '../interfaces/asignatura';
+import { Seccion } from '../interfaces/seccion';
+import firebase from 'firebase/compat/app';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AsignaturaService {
-  constructor(
-    private firestore: AngularFirestore,
-    private router: Router,
-    private mensajes: MensajesService
-  ) {}
+  constructor(private firestore: AngularFirestore) {}
 
-  async crearAsignatura(nombre: string) {
-    const uid = this.firestore.createId();
-    const asignatura: Asignatura = { uid, nombre };
-
-    try {
-      await this.firestore.collection('asignaturas').doc(uid).set(asignatura);
-      this.mensajes
-        .mensaje('Asignatura creada correctamente', 'success', 'Exito')
-        .then(() => {
-          this.router.navigate(['/admin-dashboard']);
-        });
-    } catch (error) {
-      this.mensajes.mensaje('No se pudo crear la asignatura', 'error', 'Error');
-    }
-  }
-
-  async crearSeccion(asignaturaUid: string, cupos: number) {
-    try {
-      const seccionesSnapshot = await this.firestore
-        .collection<Seccion>('secciones', (ref) =>
-          ref.where('asignaturaUid', '==', asignaturaUid)
-        )
-        .get()
-        .toPromise();
-
-      if (!seccionesSnapshot) {
-        throw new Error('No se pudieron obtener las secciones existentes');
-      }
-
-      const secciones = seccionesSnapshot.docs.map((doc) => doc.data());
-
-      const maxNumero = secciones.reduce(
-        (max, seccion) => (seccion.numero > max ? seccion.numero : max),
-        0
-      );
-      const nuevoNumero = maxNumero + 1;
-
-      const seccionUid = this.firestore.createId();
-      const seccion: Seccion = {
-        numero: nuevoNumero,
-        seccionUid,
-        asignaturaUid,
-        cupos,
-      };
-
-      await this.firestore.collection('secciones').doc(seccionUid).set(seccion);
-      this.mensajes.mensaje('Sección creada correctamente', 'success', 'Exito');
-    } catch (error) {
-      this.mensajes.mensaje('No se pudo crear la sección', 'error', 'Error');
-    }
-  }
-
-  listarSeccionesPorAsignatura(asignaturaUid: string) {
+  crearAsignatura(asignatura: Asignatura): Promise<void> {
+    const asignaturaId = this.firestore.createId();
     return this.firestore
-      .collection<Seccion>('secciones', (ref) =>
-        ref.where('asignaturaUid', '==', asignaturaUid)
+      .collection('asignaturas')
+      .doc(asignaturaId)
+      .set({ ...asignatura, uid: asignaturaId });
+  }
+
+  agregarProfesor(asignaturaId: string, profesorUid: string): Promise<void> {
+    return this.firestore
+      .collection('asignaturas')
+      .doc(asignaturaId)
+      .get()
+      .toPromise()
+      .then((doc) => {
+        if (doc && doc.exists) {
+          const asignatura = doc.data() as Asignatura;
+          if (
+            asignatura.profesores &&
+            asignatura.profesores.includes(profesorUid)
+          ) {
+            return Promise.reject(
+              'El profesor ya está asignado a esta asignatura'
+            );
+          } else {
+            return this.firestore
+              .collection('asignaturas')
+              .doc(asignaturaId)
+              .update({
+                profesores:
+                  firebase.firestore.FieldValue.arrayUnion(profesorUid),
+              });
+          }
+        } else {
+          return Promise.reject('Asignatura no encontrada');
+        }
+      });
+  }
+
+  listarAsignaturas() {
+    return this.firestore.collection<Asignatura>('asignaturas').valueChanges();
+  }
+
+  listarAsignaturasPorProfesor(profesorUid: string) {
+    return this.firestore
+      .collection('asignaturas', (ref) =>
+        ref.where('profesores', 'array-contains', profesorUid)
       )
       .valueChanges();
   }
 
-  getAsignaturas(): Observable<Asignatura[]> {
+  listarSeccionesPorProfesor(profesorUid: string) {
+    return this.firestore
+      .collection('secciones', (ref) =>
+        ref.where('profesorUid', '==', profesorUid)
+      )
+      .valueChanges();
+  }
+
+  asignaturaExiste(nombre: string): Promise<boolean> {
+    const nombreLowerCase = nombre.toLowerCase();
+    return this.firestore
+      .collection('asignaturas', (ref) =>
+        ref.where('nombreLowerCase', '==', nombreLowerCase)
+      )
+      .get()
+      .toPromise()
+      .then((querySnapshot) => {
+        if (querySnapshot) {
+          return !querySnapshot.empty;
+        }
+        return false;
+      });
+  }
+
+  agregarSeccion(asignaturaId: string, seccion: Seccion): Promise<void> {
+    const seccionId = this.firestore.createId();
     return this.firestore
       .collection('asignaturas')
-      .snapshotChanges()
-      .pipe(
-        map((actions) =>
-          actions.map((a) => {
-            const data = a.payload.doc.data() as Asignatura;
-            data.uid = a.payload.doc.id;
-            return data;
-          })
-        )
-      );
-  }
-
-  getSecciones(): Observable<Seccion[]> {
-    return this.firestore
-      .collection<Seccion>('secciones')
-      .snapshotChanges()
-      .pipe(
-        map((actions) =>
-          actions.map((a) => {
-            const data = a.payload.doc.data() as Seccion;
-            data.seccionUid = a.payload.doc.id;
-            return data;
-          })
-        )
-      );
-  }
-
-  async asignarAsignaturasAProfesor(
-    profesorUid: string,
-    asignaturaUids: string[]
-  ) {
-    const batch = this.firestore.firestore.batch();
-
-    try {
-      const profesorRef = this.firestore
-        .collection('profesores')
-        .doc(profesorUid).ref;
-
-      for (const asignaturaUid of asignaturaUids) {
-        const asignaturaRef = this.firestore
-          .collection('asignaturas')
-          .doc(asignaturaUid).ref;
-        const asignaturaSnapshot = await asignaturaRef.get();
-        const asignaturaData = asignaturaSnapshot.data() as Asignatura;
-
-        // Actualizar la asignatura con el profesorUid
-        batch.update(asignaturaRef, { profesorUid });
-
-        // Añadir la asignatura a la subcolección del profesor
-        batch.set(profesorRef.collection('asignaturas').doc(asignaturaUid), {
-          uid: asignaturaUid,
-          nombre: asignaturaData.nombre,
-        });
-
-        // Añadir las secciones de la asignatura a la subcolección del profesor
-        const seccionesSnapshot = await this.firestore
-          .collection('secciones', (ref) =>
-            ref.where('asignaturaUid', '==', asignaturaUid)
-          )
-          .get()
-          .toPromise();
-        if (seccionesSnapshot && !seccionesSnapshot.empty) {
-          seccionesSnapshot.forEach((doc) => {
-            const seccionData = doc.data() as Seccion;
-            seccionData.seccionUid = doc.id;
-            batch.set(
-              profesorRef
-                .collection('asignaturas')
-                .doc(asignaturaUid)
-                .collection('secciones')
-                .doc(seccionData.seccionUid),
-              seccionData
-            );
-          });
-        }
-      }
-
-      await batch.commit();
-      this.mensajes.mensaje(
-        'Asignaturas asignadas correctamente',
-        'success',
-        'Éxito'
-      );
-    } catch (error) {
-      this.mensajes.mensaje(
-        'No se pudo asignar las asignaturas',
-        'error',
-        'Error'
-      );
-    }
-  }
-
-  async asignarSeccionesAProfesor(profesorUid: string, seccionUids: string[]) {
-    const batch = this.firestore.firestore.batch();
-
-    try {
-      const profesorRef = this.firestore
-        .collection('profesores')
-        .doc(profesorUid).ref;
-
-      for (const seccionUid of seccionUids) {
-        const seccionRef = this.firestore
-          .collection('secciones')
-          .doc(seccionUid).ref;
-        const seccionSnapshot = await seccionRef.get();
-        const seccionData = seccionSnapshot.data() as Seccion;
-
-        // Añadir la sección a la subcolección del profesor
-        batch.set(
-          profesorRef.collection('secciones').doc(seccionUid),
-          seccionData
+      .doc(asignaturaId)
+      .collection('secciones')
+      .doc(seccionId)
+      .set({ ...seccion, uid: seccionId })
+      .then(() => {
+        return this.asignarAlumnosASeccion(
+          asignaturaId,
+          seccionId,
+          seccion.cupos
         );
-      }
-
-      await batch.commit();
-      this.mensajes.mensaje(
-        'Secciones asignadas correctamente',
-        'success',
-        'Éxito'
-      );
-    } catch (error) {
-      this.mensajes.mensaje(
-        'No se pudo asignar las secciones',
-        'error',
-        'Error'
-      );
-    }
+      });
   }
 
-  listarAsignaturasPorProfesor(profesorUid: string): Observable<Asignatura[]> {
+  private asignarAlumnosASeccion(
+    asignaturaId: string,
+    seccionId: string,
+    cupos: number
+  ): Promise<void> {
     return this.firestore
-      .collection(`profesores/${profesorUid}/asignaturas`)
-      .valueChanges() as Observable<Asignatura[]>;
+      .collection('usuarios', (ref) =>
+        ref.where('tipo', '==', 'alumno').limit(cupos)
+      )
+      .get()
+      .toPromise()
+      .then((querySnapshot) => {
+        if (querySnapshot) {
+          const alumnos: string[] = [];
+          querySnapshot.forEach((doc) => {
+            alumnos.push(doc.id);
+          });
+          return this.firestore
+            .collection('asignaturas')
+            .doc(asignaturaId)
+            .collection('secciones')
+            .doc(seccionId)
+            .update({ alumnos: alumnos });
+        } else {
+          return Promise.reject('No se encontraron alumnos');
+        }
+      });
   }
 
-  listarSeccionesPorProfesor(profesorUid: string): Observable<Seccion[]> {
+  obtenerAlumnosNoAsignados(asignaturaId: string): Promise<string[]> {
     return this.firestore
-      .collection(`profesores/${profesorUid}/secciones`)
-      .valueChanges() as Observable<Seccion[]>;
-  }
-
-  async asignarAlumnosASeccion(seccionUid: string, alumnoUids: string[]) {
-    const batch = this.firestore.firestore.batch();
-
-    try {
-      const seccionRef = this.firestore
-        .collection('secciones')
-        .doc(seccionUid).ref;
-
-      for (const alumnoUid of alumnoUids) {
-        const alumnoRef = this.firestore
-          .collection('alumnos')
-          .doc(alumnoUid).ref;
-        const alumnoSnapshot = await alumnoRef.get();
-        const alumnoData = alumnoSnapshot.data() as Alumno;
-
-        // Añadir el alumno a la subcolección de la sección
-        batch.set(seccionRef.collection('alumnos').doc(alumnoUid), alumnoData);
-      }
-
-      await batch.commit();
-      this.mensajes.mensaje(
-        'Alumnos asignados correctamente',
-        'success',
-        'Éxito'
-      );
-    } catch (error) {
-      this.mensajes.mensaje('No se pudo asignar los alumnos', 'error', 'Error');
-    }
+      .collection('usuarios', (ref) => ref.where('tipo', '==', 'alumno'))
+      .get()
+      .toPromise()
+      .then((querySnapshot) => {
+        if (!querySnapshot) {
+          return [];
+        }
+        const alumnos: string[] = [];
+        querySnapshot.forEach((doc) => {
+          alumnos.push(doc.id);
+        });
+        return this.firestore
+          .collection('asignaturas')
+          .doc(asignaturaId)
+          .get()
+          .toPromise()
+          .then((asignaturaDoc) => {
+            if (asignaturaDoc && asignaturaDoc.exists) {
+              const asignatura = asignaturaDoc.data() as Asignatura;
+              const alumnosAsignados =
+                asignatura.secciones?.flatMap((seccion) => seccion.alumnos) ||
+                [];
+              return alumnos.filter(
+                (alumno) => !alumnosAsignados.includes(alumno)
+              );
+            } else {
+              return alumnos;
+            }
+          });
+      });
   }
 }

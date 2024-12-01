@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+
 import { AsignarAsignaturasPageRoutingModule } from './asignar-asignaturas-routing.module';
 import { AsignarAsignaturasPage } from './asignar-asignaturas.page';
 
@@ -10,8 +11,8 @@ import { AsignarAsignaturasPage } from './asignar-asignaturas.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AsignarAsignaturasPageRoutingModule
+    AsignarAsignaturasPageRoutingModule,
   ],
-  declarations: [AsignarAsignaturasPage]
+  declarations: [AsignarAsignaturasPage],
 })
 export class AsignarAsignaturasPageModule {}

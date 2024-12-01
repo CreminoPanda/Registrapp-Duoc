@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AsignaturaService } from 'src/app/services/asignatura.service';
-import { Asignatura } from 'src/app/interfaces/asignatura';
-import { Seccion } from 'src/app/interfaces/seccion';
 import { ActivatedRoute } from '@angular/router';
+import { UsuariosService } from 'src/app/services/usuario.service';
+import { AsignaturaService } from 'src/app/services/asignatura.service';
+import { Usuario } from 'src/app/interfaces/usuario';
+import { Asignatura } from 'src/app/interfaces/asignatura';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,75 +12,62 @@ import Swal from 'sweetalert2';
   styleUrls: ['./asignar-asignaturas.page.scss'],
 })
 export class AsignarAsignaturasPage implements OnInit {
-  profesorUid: string | null = null;
+  profesores: Usuario[] = [];
   asignaturas: Asignatura[] = [];
-  secciones: Seccion[] = [];
-  asignaturasSeleccionadas: string[] = [];
-  seccionesSeleccionadas: string[] = [];
+  asignaturaSeleccionada: string = '';
+  profesorSeleccionado: string = '';
 
   constructor(
-    private asignaturaService: AsignaturaService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private usuariosService: UsuariosService,
+    private asignaturaService: AsignaturaService
+  ) {}
 
   ngOnInit() {
-    this.profesorUid = this.route.snapshot.paramMap.get('profesorUid');
-    this.asignaturaService.getAsignaturas().subscribe(asignaturas => {
-      this.asignaturas = asignaturas;
+    this.route.paramMap.subscribe((params) => {
+      this.profesorSeleccionado = params.get('uid') || '';
     });
-  }
 
-  toggleAsignatura(asignaturaUid: string) {
-    const index = this.asignaturasSeleccionadas.indexOf(asignaturaUid);
-    if (index > -1) {
-      this.asignaturasSeleccionadas.splice(index, 1);
-      this.secciones = [];
-    } else {
-      this.asignaturasSeleccionadas.push(asignaturaUid);
-      this.asignaturaService.listarSeccionesPorAsignatura(asignaturaUid).subscribe(secciones => {
-        this.secciones = secciones;
+    this.usuariosService.getProfesores().subscribe((profesores: Usuario[]) => {
+      this.profesores = profesores;
+    });
+
+    this.asignaturaService
+      .listarAsignaturas()
+      .subscribe((asignaturas: Asignatura[]) => {
+        this.asignaturas = asignaturas;
       });
-    }
   }
 
-  toggleSeccion(seccionUid: string) {
-    const index = this.seccionesSeleccionadas.indexOf(seccionUid);
-    if (index > -1) {
-      this.seccionesSeleccionadas.splice(index, 1);
-    } else {
-      this.seccionesSeleccionadas.push(seccionUid);
-    }
-  }
-
-  asignarAsignaturasYSecciones() {
-    if (this.profesorUid) {
-      this.asignaturaService.asignarAsignaturasAProfesor(this.profesorUid, this.asignaturasSeleccionadas).then(() => {
-        return this.asignaturaService.asignarSeccionesAProfesor(this.profesorUid!, this.seccionesSeleccionadas);
-      }).then(() => {
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Asignaturas y secciones asignadas correctamente!',
-          icon: 'success',
-          confirmButtonText: 'OK',
-          heightAuto: false
-        });
-      }).catch(error => {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No se pudieron asignar las asignaturas y secciones!',
-          icon: 'error',
-          confirmButtonText: 'OK',
-          heightAuto: false
-        });
-      });
-    } else {
+  asignarAsignatura() {
+    if (
+      this.asignaturaSeleccionada.trim() === '' ||
+      this.profesorSeleccionado.trim() === ''
+    ) {
       Swal.fire({
-        title: 'Error!',
-        text: 'No se pudo obtener el UID del profesor!',
+        title: 'Error',
+        text: 'Debe seleccionar una asignatura y un profesor',
         icon: 'error',
-        confirmButtonText: 'OK',
-        heightAuto: false
       });
+      return;
     }
+
+    this.asignaturaService
+      .agregarProfesor(this.asignaturaSeleccionada, this.profesorSeleccionado)
+      .then(() => {
+        Swal.fire({
+          title: 'Asignatura asignada',
+          text: 'La asignatura ha sido asignada exitosamente',
+          icon: 'success',
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error,
+          icon: 'error',
+        });
+        console.error('Error al asignar la asignatura:', error);
+      });
   }
 }

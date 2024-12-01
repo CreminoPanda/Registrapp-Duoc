@@ -1,7 +1,10 @@
-import { Seccion } from "src/app/interfaces/seccion";
+import { Seccion } from 'src/app/interfaces/seccion';
+import { Profesor } from 'src/app/interfaces/profesor';
 
 export interface Asignatura {
-    uid: string;
-    nombre: string;
-    secciones?: Seccion[]; // Lista de secciones de la asignatura
+  uid: string;
+  nombre: string;
+  nombreLowerCase?: string;
+  secciones?: Seccion[];
+  profesores?: string[];
 }

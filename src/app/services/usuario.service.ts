@@ -56,15 +56,20 @@ export class UsuariosService {
       );
   }
 
+  getProfesores(): Observable<Usuario[]> {
+    return this.angularFirestore
+      .collection<Usuario>('usuarios', (ref) =>
+        ref.where('tipo', '==', 'profesor')
+      )
+      .valueChanges();
+  }
+
   addUsuario(usuario: Usuario) {
     this.usuarios.push(usuario);
   }
 
   deleteUsuario(uid: string): Promise<void> {
     return this.angularFirestore.collection('usuarios').doc(uid).delete();
-    //update({
-    //isDisabled: true, // O puedes usar isActive: false
-    //});
   }
 
   updateUsuario(usuario: Usuario): Promise<void> {

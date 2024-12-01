@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
+import { Asignatura } from 'src/app/interfaces/asignatura';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,43 +9,58 @@ import Swal from 'sweetalert2';
   styleUrls: ['./crear-asignatura.page.scss'],
 })
 export class CrearAsignaturaPage implements OnInit {
-  asignaturaForm: FormGroup;
+  nombreAsignatura: string = '';
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private asignaturaService: AsignaturaService
-  ) {
-    this.asignaturaForm = this.formBuilder.group({
-      nombre: ['', Validators.required]
-    });
-  }
+  constructor(private asignaturaService: AsignaturaService) {}
 
   ngOnInit() {}
 
   async crearAsignatura() {
-    if (this.asignaturaForm.invalid) {
+    if (this.nombreAsignatura.trim() === '') {
       Swal.fire({
         title: 'Error',
-        text: 'Por favor, completa todos los campos correctamente.',
+        text: 'El nombre de la asignatura no puede estar vacío',
         icon: 'error',
-        confirmButtonText: 'OK',
-        heightAuto: false
       });
       return;
     }
 
-    const nombre = this.asignaturaForm.get('nombre')?.value;
-
-    try {
-      await this.asignaturaService.crearAsignatura(nombre);
-    } catch (error) {
+    const nombreLowerCase = this.nombreAsignatura.toLowerCase();
+    const asignaturaExiste = await this.asignaturaService.asignaturaExiste(
+      nombreLowerCase
+    );
+    if (asignaturaExiste) {
       Swal.fire({
-        title: 'Error!',
-        text: 'No se puede crear la asignatura!',
+        title: 'Error',
+        text: 'No puedes crear una asignatura ya existente',
         icon: 'error',
-        confirmButtonText: 'OK',
-        heightAuto: false
       });
+      return;
     }
+
+    const nuevaAsignatura: Asignatura = {
+      uid: '',
+      nombre: this.nombreAsignatura,
+      nombreLowerCase: nombreLowerCase,
+    };
+
+    this.asignaturaService
+      .crearAsignatura(nuevaAsignatura)
+      .then(() => {
+        Swal.fire({
+          title: 'Asignatura creada',
+          text: 'La asignatura ha sido creada exitosamente',
+          icon: 'success',
+        });
+        this.nombreAsignatura = ''; // Limpiar el campo después de crear la asignatura
+      })
+      .catch((error: any) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'Error al crear la asignatura',
+          icon: 'error',
+        });
+        console.error('Error al crear la asignatura:', error);
+      });
   }
 }

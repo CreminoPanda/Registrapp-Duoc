@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
+
 import { AsignarAsignaturasPage } from './asignar-asignaturas.page';
 
 const routes: Routes = [

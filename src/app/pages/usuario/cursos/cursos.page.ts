@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
-import { Asignatura } from 'src/app/interfaces/asignatura'; 
-import { AuthService } from 'src/app/services/firebase/auth.service'; 
+import { Asignatura } from 'src/app/interfaces/asignatura';
+import { AuthService } from 'src/app/services/firebase/auth.service';
 
 @Component({
   selector: 'app-cursos',
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/firebase/auth.service';
 })
 export class CursosPage implements OnInit {
   asignaturas: Asignatura[] = [];
-  profesorUid: string = ''; 
+  profesorUid: string = '';
 
   constructor(
     private router: Router,
@@ -20,20 +20,12 @@ export class CursosPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authService.isLogged().subscribe(user => {
+    this.authService.isLogged().subscribe((user) => {
       if (user) {
         this.profesorUid = user.uid;
-        this.obtenerAsignaturas();
       }
     });
   }
-
-  obtenerAsignaturas() {
-    this.asignaturaService.listarAsignaturasPorProfesor(this.profesorUid).subscribe(asignaturas => {
-      this.asignaturas = asignaturas;
-    });
-  }
-
   verCurso(asignaturaUid: string) {
     this.router.navigate(['/ver-secciones', asignaturaUid]);
   }

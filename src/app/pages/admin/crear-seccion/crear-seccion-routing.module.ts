@@ -4,13 +4,9 @@ import { CrearSeccionPage } from './crear-seccion.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: CrearSeccionPage
+    path: ':asignaturaId',
+    component: CrearSeccionPage,
   },
-  {
-    path: ':asignaturaUid',
-    component: CrearSeccionPage
-  }
 ];
 
 @NgModule({

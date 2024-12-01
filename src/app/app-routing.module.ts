@@ -108,38 +108,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'crear-asignatura',
-    loadChildren: () =>
-      import('./pages/admin/crear-asignatura/crear-asignatura.module').then(
-        (m) => m.CrearAsignaturaPageModule
-      ),
-  },
-  {
     path: 'asignaturas',
     loadChildren: () =>
       import('./pages/admin/asignaturas/asignaturas.module').then(
         (m) => m.AsignaturasPageModule
-      ),
-  },
-  {
-    path: 'listar-asignaturas',
-    loadChildren: () =>
-      import('./pages/admin/listar-asignaturas/listar-asignaturas.module').then(
-        (m) => m.ListarAsignaturasPageModule
-      ),
-  },
-  {
-    path: 'crear-seccion',
-    loadChildren: () =>
-      import('./pages/admin/crear-seccion/crear-seccion.module').then(
-        (m) => m.CrearSeccionPageModule
-      ),
-  },
-  {
-    path: 'listar-seccion',
-    loadChildren: () =>
-      import('./pages/admin/listar-seccion/listar-seccion.module').then(
-        (m) => m.ListarSeccionPageModule
       ),
   },
   {
@@ -154,20 +126,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/invitado/scanqr/scanqr.module').then(
         (m) => m.ScanqrPageModule
-      ),
-  },
-  {
-    path: 'asignar-asignaturas/:profesorUid',
-    loadChildren: () =>
-      import(
-        './pages/admin/asignar-asignaturas/asignar-asignaturas.module'
-      ).then((m) => m.AsignarAsignaturasPageModule),
-  },
-  {
-    path: 'ver-secciones/:asignaturaUid',
-    loadChildren: () =>
-      import('./pages/usuario/ver-secciones/ver-secciones.module').then(
-        (m) => m.VerSeccionesPageModule
       ),
   },
   {
@@ -190,6 +148,41 @@ const routes: Routes = [
       import('./pages/usuario/generar-qr/generar-qr.module').then(
         (m) => m.GenerarQrPageModule
       ),
+  },
+  {
+    path: 'crear-asignatura',
+    loadChildren: () =>
+      import('./pages/admin/crear-asignatura/crear-asignatura.module').then(
+        (m) => m.CrearAsignaturaPageModule
+      ),
+  },
+  {
+    path: 'listar-asignaturas',
+    loadChildren: () =>
+      import('./pages/admin/listar-asignaturas/listar-asignaturas.module').then(
+        (m) => m.ListarAsignaturasPageModule
+      ),
+  },
+  {
+    path: 'crear-seccion/:asignaturaId',
+    loadChildren: () =>
+      import('./pages/admin/crear-seccion/crear-seccion.module').then(
+        (m) => m.CrearSeccionPageModule
+      ),
+  },
+  {
+    path: 'listar-seccion',
+    loadChildren: () =>
+      import('./pages/admin/listar-seccion/listar-seccion.module').then(
+        (m) => m.ListarSeccionPageModule
+      ),
+  },
+  {
+    path: 'asignar-asignaturas/:uid',
+    loadChildren: () =>
+      import(
+        './pages/admin/asignar-asignaturas/asignar-asignaturas.module'
+      ).then((m) => m.AsignarAsignaturasPageModule),
   },
 ];
 
