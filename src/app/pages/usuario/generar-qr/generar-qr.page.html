@@ -5,6 +5,24 @@
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item *ngFor="let alumno of alumnos">
+      <ion-label>
+        <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
+      </ion-label>
+      <ion-select
+        [(ngModel)]="alumno.presente"
+        (ionChange)="marcarAsistencia(alumno)"
+      >
+        <ion-select-option [value]="false">Ausente</ion-select-option>
+        <ion-select-option [value]="true">Presente</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-button expand="full" (click)="generarQR()">Generar QR</ion-button>
+  <ion-button expand="full" (click)="finalizarClase()"
+    >Finalizar Clase</ion-button
+  >
   <div *ngIf="qrCode">
     <img [src]="qrCode" alt="QR Code" />
   </div>

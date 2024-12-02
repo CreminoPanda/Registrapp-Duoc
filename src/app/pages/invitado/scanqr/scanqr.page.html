@@ -1,17 +1,22 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>Escanear QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Escanear QR</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div class="ion-padding">
-    <ion-button expand="full" (click)="scan()">Iniciar Escaneo</ion-button>
+<ion-content>
+  <ion-button expand="full" (click)="scan()">Escanear QR</ion-button>
+  <div *ngIf="seccionUid">
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          <h2>Profesor: {{ profesor.nombre }}</h2>
+          <h2>Sección: {{ seccion.nombre }}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="full" (click)="marcarPresente()"
+      >Marcar Presente</ion-button
+    >
   </div>
 </ion-content>

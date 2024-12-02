@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Asignatura } from '../interfaces/asignatura';
 import { Seccion } from '../interfaces/seccion';
 import firebase from 'firebase/compat/app';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -53,17 +54,21 @@ export class AsignaturaService {
     return this.firestore.collection<Asignatura>('asignaturas').valueChanges();
   }
 
-  listarAsignaturasPorProfesor(profesorUid: string) {
+  listarProfesores(): Observable<any[]> {
+    return this.firestore.collection('profesores').valueChanges();
+  }
+
+  listarAsignaturasPorProfesor(profesorUid: string): Observable<Asignatura[]> {
     return this.firestore
-      .collection('asignaturas', (ref) =>
+      .collection<Asignatura>('asignaturas', (ref) =>
         ref.where('profesores', 'array-contains', profesorUid)
       )
       .valueChanges();
   }
 
-  listarSeccionesPorProfesor(profesorUid: string) {
+  listarSeccionesPorProfesor(profesorUid: string): Observable<Seccion[]> {
     return this.firestore
-      .collection('secciones', (ref) =>
+      .collection<Seccion>('secciones', (ref) =>
         ref.where('profesorUid', '==', profesorUid)
       )
       .valueChanges();
@@ -85,12 +90,16 @@ export class AsignaturaService {
       });
   }
 
-  agregarSeccion(asignaturaId: string, seccion: Seccion): Promise<void> {
+  agregarSeccion(
+    asignaturaId: string,
+    seccion: Seccion,
+    profesorUid: string
+  ): Promise<void> {
     const seccionId = this.firestore.createId();
     return this.firestore
       .collection('secciones')
       .doc(seccionId)
-      .set({ ...seccion, uid: seccionId, asignaturaId })
+      .set({ ...seccion, uid: seccionId, asignaturaId, profesorUid })
       .then(() => {
         return this.asignarAlumnosASeccion(
           asignaturaId,
@@ -167,6 +176,44 @@ export class AsignaturaService {
       });
   }
 
+  obtenerProfesoresAsignados(
+    asignaturaId: string
+  ): Promise<{ uid: string; nombre: string }[]> {
+    return this.firestore
+      .collection('asignaturas')
+      .doc(asignaturaId)
+      .get()
+      .toPromise()
+      .then((asignaturaDoc) => {
+        if (asignaturaDoc && asignaturaDoc.exists) {
+          const asignatura = asignaturaDoc.data() as Asignatura;
+          const profesoresAsignados = asignatura.profesores || [];
+          if (profesoresAsignados.length === 0) {
+            return [];
+          }
+          return this.firestore
+            .collection('usuarios', (ref) =>
+              ref.where('uid', 'in', profesoresAsignados)
+            )
+            .get()
+            .toPromise()
+            .then((querySnapshot) => {
+              if (!querySnapshot) {
+                return [];
+              }
+              const profesores: { uid: string; nombre: string }[] = [];
+              querySnapshot.forEach((doc) => {
+                const data = doc.data() as { nombre: string };
+                profesores.push({ uid: doc.id, nombre: data.nombre });
+              });
+              return profesores;
+            });
+        } else {
+          return [];
+        }
+      });
+  }
+
   obtenerAsignaturaPorUid(
     asignaturaId: string
   ): Promise<Asignatura | undefined> {
@@ -197,6 +244,95 @@ export class AsignaturaService {
         } else {
           return [];
         }
+      });
+  }
+
+  obtenerAlumnosPorSeccion(seccionUid: string): Promise<any[]> {
+    return this.firestore
+      .collection('secciones')
+      .doc(seccionUid)
+      .get()
+      .toPromise()
+      .then((seccionDoc) => {
+        if (!seccionDoc || !seccionDoc.exists) {
+          return [];
+        }
+        const seccion = seccionDoc.data() as Seccion;
+        const alumnosUids = seccion.alumnos || [];
+        const alumnosPromises = alumnosUids.map((uid) =>
+          this.firestore.collection('usuarios').doc(uid).get().toPromise()
+        );
+        return Promise.all(alumnosPromises).then((alumnosDocs) => {
+          return alumnosDocs
+            .filter((doc) => doc && doc.exists)
+            .map((doc) => (doc ? doc.data() : null))
+            .filter((alumno) => alumno !== null);
+        });
+      });
+  }
+
+  marcarAsistencia(
+    seccionUid: string,
+    alumnoUid: string,
+    presente: boolean
+  ): Promise<void> {
+    return this.firestore
+      .collection('secciones')
+      .doc(seccionUid)
+      .collection('alumnos')
+      .doc(alumnoUid)
+      .set({ presente: presente }, { merge: true });
+  }
+
+  obtenerDetalleSeccion(seccionUid: string): Promise<any> {
+    return this.firestore
+      .collection('secciones')
+      .doc(seccionUid)
+      .get()
+      .toPromise()
+      .then((seccionDoc) => {
+        if (!seccionDoc || !seccionDoc.exists) {
+          throw new Error('Sección no encontrada');
+        }
+        const seccion = seccionDoc.data() as Seccion;
+        return this.firestore
+          .collection('usuarios')
+          .doc(seccion.profesorUid)
+          .get()
+          .toPromise()
+          .then((profesorDoc) => {
+            if (!profesorDoc || !profesorDoc.exists) {
+              throw new Error('Profesor no encontrado');
+            }
+            const profesor = profesorDoc.data();
+            return { seccion, profesor };
+          });
+      });
+  }
+
+  finalizarClase(seccionUid: string): Promise<void> {
+    return this.firestore
+      .collection('secciones')
+      .doc(seccionUid)
+      .collection('alumnos')
+      .get()
+      .toPromise()
+      .then((querySnapshot) => {
+        if (!querySnapshot) {
+          return;
+        }
+        const alumnosPresentes = querySnapshot.docs.filter(
+          (doc) => doc.data()['presente']
+        ).length;
+        const fecha = new Date();
+        return this.firestore
+          .collection('asistencias')
+          .add({
+            seccionUid: seccionUid,
+            fecha: fecha,
+            alumnosPresentes: alumnosPresentes,
+          })
+          .then(() => {});
       });
   }
 }

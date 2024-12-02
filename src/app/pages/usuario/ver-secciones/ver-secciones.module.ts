@@ -1,11 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
 
 import { VerSeccionesPageRoutingModule } from './ver-secciones-routing.module';
-
 import { VerSeccionesPage } from './ver-secciones.page';
 
 @NgModule({
@@ -13,8 +11,9 @@ import { VerSeccionesPage } from './ver-secciones.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    VerSeccionesPageRoutingModule
+    VerSeccionesPageRoutingModule,
   ],
-  declarations: [VerSeccionesPage]
+  declarations: [VerSeccionesPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class VerSeccionesPageModule {}

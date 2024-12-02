@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Cursos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let asignatura of asignaturas">
+      {{ asignatura.nombre }}
+      <ion-button slot="end" (click)="verSecciones(asignatura.uid)"
+        >Ver Secciones</ion-button
+      >
+    </ion-item>
+  </ion-list>
+</ion-content>

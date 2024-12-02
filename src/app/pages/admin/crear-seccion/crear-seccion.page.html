@@ -18,6 +18,17 @@
       </ion-select-option>
     </ion-select>
   </ion-item>
+  <ion-item>
+    <ion-label>Seleccionar Profesor</ion-label>
+    <ion-select [(ngModel)]="profesorSeleccionado">
+      <ion-select-option
+        *ngFor="let profesor of profesoresDisponibles"
+        [value]="profesor.uid"
+      >
+        {{ profesor.nombre }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
   <ion-button expand="full" (click)="agregarSeccion()"
     >Crear Sección</ion-button
   >

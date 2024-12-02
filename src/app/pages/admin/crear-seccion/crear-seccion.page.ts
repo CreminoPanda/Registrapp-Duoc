@@ -16,6 +16,8 @@ export class CrearSeccionPage implements OnInit {
   alumnosNoAsignados: { uid: string; nombre: string }[] = [];
   alumnosSeleccionados: string[] = [];
   asignaturaNombre: string = '';
+  profesoresDisponibles: { uid: string; nombre: string }[] = [];
+  profesorSeleccionado: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +29,19 @@ export class CrearSeccionPage implements OnInit {
       this.asignaturaId = params.get('asignaturaId') || '';
       this.cargarAlumnosNoAsignados();
       this.cargarAsignaturaNombre();
+      this.cargarProfesoresDisponibles();
     });
+  }
+  cargarProfesoresDisponibles() {
+    this.asignaturaService
+      .obtenerProfesoresAsignados(this.asignaturaId)
+      .then((profesores) => {
+        console.log('Profesores disponibles:', profesores); // Agregar console.log
+        this.profesoresDisponibles = profesores;
+      })
+      .catch((error) => {
+        console.error('Error al cargar profesores disponibles:', error);
+      });
   }
 
   cargarAlumnosNoAsignados() {
@@ -115,10 +129,16 @@ export class CrearSeccionPage implements OnInit {
       nombre: this.nombreSeccion,
       cupos: this.cupos,
       alumnos: this.alumnosSeleccionados,
+      asignaturaUid: this.asignaturaId,
+      profesorUid: this.profesorSeleccionado,
     };
 
     this.asignaturaService
-      .agregarSeccion(this.asignaturaId, nuevaSeccion)
+      .agregarSeccion(
+        this.asignaturaId,
+        nuevaSeccion,
+        this.profesorSeleccionado
+      )
       .then(() => {
         Swal.fire({
           title: 'Sección creada',
@@ -130,7 +150,6 @@ export class CrearSeccionPage implements OnInit {
         this.cupos = 0;
         this.alumnosSeleccionados = [];
         this.cargarAlumnosNoAsignados();
-        this.generarNombreSeccion(); // Generar un nuevo nombre para la siguiente sección
       })
       .catch((error) => {
         Swal.fire({

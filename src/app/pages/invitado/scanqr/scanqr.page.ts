@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { NavController } from '@ionic/angular';
 import Swal from 'sweetalert2';
+import { AsignaturaService } from 'src/app/services/asignatura.service';
+import { AuthService } from 'src/app/services/firebase/auth.service';
 
 @Component({
   selector: 'app-scan-qr',
   templateUrl: './scanqr.page.html',
   styleUrls: ['./scanqr.page.scss'],
 })
-export class ScanQrPage {
-  constructor(private navCtrl: NavController) {}
+export class ScanQrPage implements OnInit {
+  seccion: any = {};
+  profesor: any = {};
+  seccionUid: string = '';
+  alumnoUid: string = '';
+
+  constructor(
+    private navCtrl: NavController,
+    private asignaturaService: AsignaturaService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.authService.isLogged().subscribe((uid) => {
+      this.alumnoUid = uid;
+    });
+  }
 
   async scan(): Promise<void> {
     const granted = await this.requestPermissions();
@@ -26,9 +43,8 @@ export class ScanQrPage {
     const { barcodes } = await BarcodeScanner.scan();
     const qrContent = barcodes[0].rawValue;
     const qrData = JSON.parse(qrContent);
-    this.navCtrl.navigateForward('/confirmar-asistencia', {
-      queryParams: { url: qrContent },
-    });
+    this.seccionUid = qrData.seccionUid;
+    this.cargarDetalleSeccion();
   }
 
   async requestPermissions(): Promise<boolean> {
@@ -68,5 +84,40 @@ export class ScanQrPage {
         confirmButtonText: 'OK',
       });
     }
+  }
+
+  cargarDetalleSeccion() {
+    this.asignaturaService
+      .obtenerDetalleSeccion(this.seccionUid)
+      .then((detalle) => {
+        this.seccion = detalle.seccion;
+        this.profesor = detalle.profesor;
+      });
+  }
+
+  marcarPresente() {
+    this.asignaturaService
+      .obtenerAlumnosPorSeccion(this.seccionUid)
+      .then((alumnos) => {
+        const alumno = alumnos.find((a) => a.uid === this.alumnoUid);
+        if (alumno) {
+          Swal.fire({
+            title: 'Asistencia confirmada',
+            text: 'Has sido marcado como presente',
+            icon: 'success',
+          });
+          this.asignaturaService.marcarAsistencia(
+            this.seccionUid,
+            this.alumnoUid,
+            true
+          );
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'No perteneces a esta sección',
+            icon: 'error',
+          });
+        }
+      });
   }
 }

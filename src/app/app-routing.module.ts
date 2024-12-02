@@ -143,7 +143,7 @@ const routes: Routes = [
       ).then((m) => m.ConfirmarAsistenciaPageModule),
   },
   {
-    path: 'generar-qr',
+    path: 'generar-qr/:seccionUid',
     loadChildren: () =>
       import('./pages/usuario/generar-qr/generar-qr.module').then(
         (m) => m.GenerarQrPageModule
@@ -183,6 +183,13 @@ const routes: Routes = [
       import(
         './pages/admin/asignar-asignaturas/asignar-asignaturas.module'
       ).then((m) => m.AsignarAsignaturasPageModule),
+  },
+  {
+    path: 'ver-secciones/:profesorUid/:asignaturaUid',
+    loadChildren: () =>
+      import('./pages/usuario/ver-secciones/ver-secciones.module').then(
+        (m) => m.VerSeccionesPageModule
+      ),
   },
 ];
 
