@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
 import { Asignatura } from 'src/app/interfaces/asignatura';
 
@@ -13,7 +13,7 @@ export class ListarAsignaturasPage implements OnInit {
 
   constructor(
     private asignaturaService: AsignaturaService,
-    private router: Router
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
@@ -25,6 +25,6 @@ export class ListarAsignaturasPage implements OnInit {
   }
 
   irACrearSeccion(asignaturaId: string) {
-    this.router.navigate(['/crear-seccion', asignaturaId]);
+    this.navCtrl.navigateForward('/crear-seccion/' + asignaturaId);
   }
 }

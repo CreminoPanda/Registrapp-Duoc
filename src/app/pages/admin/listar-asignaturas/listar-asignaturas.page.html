@@ -10,9 +10,9 @@
       <ion-label>
         <h2>{{ asignatura.nombre }}</h2>
       </ion-label>
-      <ion-button slot="end" [routerLink]="['/crear-seccion', asignatura.uid]"
-        >Crear Sección</ion-button
-      >
+      <ion-button slot="end" (click)="irACrearSeccion(asignatura.uid)">
+        Crear Sección
+      </ion-button>
     </ion-item>
   </ion-list>
 </ion-content>

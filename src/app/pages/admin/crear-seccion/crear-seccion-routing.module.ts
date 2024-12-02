@@ -4,7 +4,7 @@ import { CrearSeccionPage } from './crear-seccion.page';
 
 const routes: Routes = [
   {
-    path: ':asignaturaId',
+    path: '',
     component: CrearSeccionPage,
   },
 ];

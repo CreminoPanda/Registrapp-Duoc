@@ -1,13 +1,7 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Crear Sección</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <ion-item>
-    <ion-label position="floating">Nombre de la Sección</ion-label>
-    <ion-input [(ngModel)]="nombreSeccion"></ion-input>
+    <ion-label position="floating">Nombre de la Sección</ion-label> <br />
+    <ion-text>{{ nombreSeccion }}</ion-text>
   </ion-item>
   <ion-item>
     <ion-label position="floating">Cupos</ion-label>
@@ -18,9 +12,9 @@
     <ion-select [(ngModel)]="alumnosSeleccionados" multiple="true">
       <ion-select-option
         *ngFor="let alumno of alumnosNoAsignados"
-        [value]="alumno"
+        [value]="alumno.uid"
       >
-        {{ alumno }}
+        {{ alumno.nombre }}
       </ion-select-option>
     </ion-select>
   </ion-item>
