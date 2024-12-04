@@ -39,7 +39,7 @@
     "ng-qrcode": "^18.0.0",
     "qrcode": "^1.5.4",
     "rxjs": "~7.8.0",
-    "sweetalert2": "^11.6.13",
+    "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

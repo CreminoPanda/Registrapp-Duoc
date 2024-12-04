@@ -272,16 +272,39 @@ export class AsignaturaService {
   }
 
   marcarAsistencia(
-    seccionUid: string,
+    asistenciaUid: string,
     alumnoUid: string,
     presente: boolean
   ): Promise<void> {
     return this.firestore
-      .collection('secciones')
-      .doc(seccionUid)
-      .collection('alumnos')
-      .doc(alumnoUid)
-      .set({ presente: presente }, { merge: true });
+      .collection('asistencias')
+      .doc(asistenciaUid)
+      .get()
+      .toPromise()
+      .then((doc) => {
+        if (doc && doc.exists) {
+          const asistencia = doc.data() as any;
+          const alumno = asistencia.alumnos[alumnoUid];
+          if (alumno) {
+            alumno.presente = presente;
+            return this.firestore
+              .collection('asistencias')
+              .doc(asistenciaUid)
+              .update({ [`alumnos.${alumnoUid}`]: alumno });
+          }
+        }
+        return Promise.resolve(); // Asegura que todas las rutas de código devuelvan un valor
+      });
+  }
+
+  guardarAsistencia(
+    asistencia: any
+  ): Promise<
+    firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+  > {
+    return this.firestore
+      .collection<firebase.firestore.DocumentData>('asistencias')
+      .add(asistencia);
   }
 
   obtenerDetalleSeccion(seccionUid: string): Promise<any> {
@@ -333,6 +356,24 @@ export class AsignaturaService {
             alumnosPresentes: alumnosPresentes,
           })
           .then(() => {});
+      });
+  }
+  obtenerAsistenciaPorSeccion(seccionUid: string) {
+    return this.firestore
+      .collection('asistencias', (ref) =>
+        ref.where('seccionUid', '==', seccionUid)
+      )
+      .get()
+      .toPromise()
+      .then((querySnapshot) => {
+        if (querySnapshot && !querySnapshot.empty) {
+          const asistencia = querySnapshot.docs[0].data();
+          return { uid: querySnapshot.docs[0].id, ...(asistencia || {}) };
+        } else {
+          throw new Error(
+            'No se encontró asistencia para la sección proporcionada.'
+          );
+        }
       });
   }
 }
