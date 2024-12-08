@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import Swal from 'sweetalert2';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
+import Swal from 'sweetalert2';
+import { AuthService } from 'src/app/services/firebase/auth.service'; // Asegúrate de tener un servicio de autenticación
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
   selector: 'app-scanqr',
@@ -15,25 +16,27 @@ export class ScanQrPage implements OnInit {
   asistenciaUid: string = ''; // UID de la asistencia actual
   profesor: any = {};
   seccion: any = {};
+  asignatura: any = {};
 
   constructor(
     private route: ActivatedRoute,
-    private asignaturaService: AsignaturaService
+    private asignaturaService: AsignaturaService,
+    private authService: AuthService // Servicio de autenticación
   ) {}
 
   ngOnInit() {
-    this.seccionUid = this.route.snapshot.paramMap.get('seccionUid') || '';
-    this.alumnoUid = this.route.snapshot.paramMap.get('alumnoUid') || '';
-    this.cargarDatosSeccion();
-    this.obtenerAsistenciaUid();
+    this.authService.isLogged().subscribe((uid) => {
+      this.alumnoUid = uid;
+    });
   }
 
   cargarDatosSeccion() {
     this.asignaturaService
-      .obtenerSecciones(this.seccionUid)
-      .then((data: any) => {
-        this.profesor = data.profesor;
-        this.seccion = data.seccion;
+      .obtenerDetalleSeccion(this.seccionUid)
+      .then((detalle: any) => {
+        this.seccion = detalle.seccion;
+        this.profesor = detalle.profesor;
+        this.asignatura = detalle.asignatura;
       })
       .catch(async (error: any) => {
         await Swal.fire({
@@ -58,66 +61,6 @@ export class ScanQrPage implements OnInit {
       });
   }
 
-  async confirmarAsistencia() {
-    if (!this.seccionUid || !this.alumnoUid || !this.asistenciaUid) {
-      await Swal.fire({
-        title: 'Error',
-        text: 'Por favor, completa todos los campos correctamente.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        heightAuto: false,
-      });
-      return;
-    }
-
-    this.asignaturaService
-      .obtenerAlumnosPorSeccion(this.seccionUid)
-      .then((alumnos: any[]) => {
-        const alumno = alumnos.find((a) => a.uid === this.alumnoUid);
-        if (alumno) {
-          this.asignaturaService
-            .marcarAsistencia(this.asistenciaUid, this.alumnoUid, true)
-            .then(async () => {
-              await Swal.fire({
-                title: 'Asistencia confirmada',
-                text: 'Has sido marcado como presente',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                heightAuto: false,
-              });
-            })
-            .catch(async (error: any) => {
-              await Swal.fire({
-                title: 'Error',
-                text: 'Error al marcar la asistencia',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                heightAuto: false,
-              });
-              console.error('Error al marcar la asistencia:', error);
-            });
-        } else {
-          Swal.fire({
-            title: 'Error',
-            text: 'No estás registrado en esta sección',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            heightAuto: false,
-          });
-        }
-      })
-      .catch(async (error: any) => {
-        await Swal.fire({
-          title: 'Error',
-          text: 'Error al obtener los alumnos de la sección',
-          icon: 'error',
-          confirmButtonText: 'OK',
-          heightAuto: false,
-        });
-        console.error('Error al obtener los alumnos de la sección:', error);
-      });
-  }
-
   async scan() {
     try {
       const granted = await this.requestPermissions();
@@ -136,8 +79,9 @@ export class ScanQrPage implements OnInit {
       const qrContent = barcodes[0].rawValue;
       const qrData = JSON.parse(qrContent);
       this.seccionUid = qrData.seccionUid;
-      this.obtenerAsistenciaUid();
-      this.cargarDetalleSeccion();
+      this.asistenciaUid = qrData.asistenciaUid; // Obtener el asistenciaUid del QR
+      await this.obtenerAsistenciaUid();
+      await this.cargarDatosSeccion();
 
       await Swal.fire({
         title: 'Escaneo exitoso',
@@ -161,15 +105,6 @@ export class ScanQrPage implements OnInit {
   async requestPermissions(): Promise<boolean> {
     const { camera } = await BarcodeScanner.requestPermissions();
     return camera === 'granted' || camera === 'limited';
-  }
-
-  cargarDetalleSeccion() {
-    this.asignaturaService
-      .obtenerDetalleSeccion(this.seccionUid)
-      .then((detalle: any) => {
-        this.seccion = detalle.seccion;
-        this.profesor = detalle.profesor;
-      });
   }
 
   async marcarPresente() {

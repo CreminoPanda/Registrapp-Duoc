@@ -115,7 +115,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'generar-qr',
+    path: 'generar-qr/:seccionUid/:asistenciaUid',
     loadChildren: () =>
       import('./pages/usuario/generar-qr/generar-qr.module').then(
         (m) => m.GenerarQrPageModule
@@ -190,6 +190,13 @@ const routes: Routes = [
       import('./pages/usuario/ver-secciones/ver-secciones.module').then(
         (m) => m.VerSeccionesPageModule
       ),
+  },
+  {
+    path: 'ver-clases-pendientes/:seccionUid',
+    loadChildren: () =>
+      import(
+        './pages/usuario/ver-clases-pendientes/ver-clases-pendientes.module'
+      ).then((m) => m.VerClasesPendientesPageModule),
   },
 ];
 

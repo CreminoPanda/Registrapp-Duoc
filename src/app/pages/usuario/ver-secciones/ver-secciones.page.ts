@@ -41,4 +41,7 @@ export class VerSeccionesPage implements OnInit {
   irAGenerarQR(seccionId: string) {
     this.router.navigate(['/generar-qr', seccionId]);
   }
+  irAClasesPendientes(seccionUid: string) {
+    this.router.navigate(['/ver-clases-pendientes', seccionUid]);
+  }
 }

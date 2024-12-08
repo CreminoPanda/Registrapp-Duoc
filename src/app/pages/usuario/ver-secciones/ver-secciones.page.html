@@ -12,6 +12,9 @@
         <p>Cupos: {{ seccion.cupos }}</p>
       </ion-label>
       <ion-button (click)="irAGenerarQR(seccion.uid)">Generar QR</ion-button>
+      <ion-button (click)="irAClasesPendientes(seccion.uid)"
+        >Ver Clases Pendientes</ion-button
+      >
     </ion-item>
   </ion-list>
 </ion-content>

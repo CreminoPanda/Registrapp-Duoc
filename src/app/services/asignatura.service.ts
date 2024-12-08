@@ -284,16 +284,20 @@ export class AsignaturaService {
       .then((doc) => {
         if (doc && doc.exists) {
           const asistencia = doc.data() as any;
-          const alumno = asistencia.alumnos[alumnoUid];
+          const alumnos = asistencia.alumnos || {};
+          const alumno = alumnos[alumnoUid];
           if (alumno) {
             alumno.presente = presente;
-            return this.firestore
-              .collection('asistencias')
-              .doc(asistenciaUid)
-              .update({ [`alumnos.${alumnoUid}`]: alumno });
+          } else {
+            alumnos[alumnoUid] = { presente };
           }
+          return this.firestore
+            .collection('asistencias')
+            .doc(asistenciaUid)
+            .update({ alumnos });
+        } else {
+          return Promise.reject('Asistencia no encontrada');
         }
-        return Promise.resolve(); // Asegura que todas las rutas de código devuelvan un valor
       });
   }
 
@@ -328,7 +332,18 @@ export class AsignaturaService {
               throw new Error('Profesor no encontrado');
             }
             const profesor = profesorDoc.data();
-            return { seccion, profesor };
+            return this.firestore
+              .collection('asignaturas')
+              .doc(seccion.asignaturaUid)
+              .get()
+              .toPromise()
+              .then((asignaturaDoc) => {
+                if (!asignaturaDoc || !asignaturaDoc.exists) {
+                  throw new Error('Asignatura no encontrada');
+                }
+                const asignatura = asignaturaDoc.data();
+                return { seccion, profesor, asignatura };
+              });
           });
       });
   }
