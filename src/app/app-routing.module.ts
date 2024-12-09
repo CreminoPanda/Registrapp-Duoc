@@ -197,7 +197,11 @@ const routes: Routes = [
       import(
         './pages/usuario/ver-clases-pendientes/ver-clases-pendientes.module'
       ).then((m) => m.VerClasesPendientesPageModule),
+  },  {
+    path: 'geolocalizacion',
+    loadChildren: () => import('./pages/geolocalizacion/geolocalizacion.module').then( m => m.GeolocalizacionPageModule)
   },
+
 ];
 
 @NgModule({

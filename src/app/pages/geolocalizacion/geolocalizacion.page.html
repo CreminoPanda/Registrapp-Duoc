@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="warning">
+    <ion-title>Mi Ubicación Actual</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding, background">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Ubicación</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngIf="latitud && longitud; else loading">
+        <p><strong>Dirección:</strong> {{ direccion }}</p>
+        <p><strong>Latitud:</strong> {{ latitud }}</p>
+        <p><strong>Longitud:</strong> {{ longitud }}</p>
+      </div>
+      <ng-template #loading>
+        <p>Cargando ubicación...</p>
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Contenedor del mapa -->
+  <div id="map" style="height: 400px;"></div>
+
+  <!-- Botón para actualizar la ubicación -->
+  <ion-button expand="block" color="secondary" (click)="obtenerUbicacion()">Actualizar Ubicación</ion-button>
+  <ion-button expand="block" color="warning" routerLink="/alerte">Siguiente</ion-button>
+</ion-content>
