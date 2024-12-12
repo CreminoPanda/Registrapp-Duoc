@@ -8,19 +8,18 @@ import { AuthService } from 'src/app/services/firebase/auth.service';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
+  constructor(private router: Router, private auth: AuthService) {}
 
-  constructor(private router: Router, private auth:AuthService) { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  logout() {
+    this.auth
+      .logout()
+      .then(() => {
+        this.router.navigate(['/home']);
+      })
+      .catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+      });
   }
-
-  async logout() {
-    try {
-      await this.auth.logout();
-      this.router.navigate(['/home']);
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  }
-
 }

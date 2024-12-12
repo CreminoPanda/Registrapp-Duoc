@@ -15,8 +15,20 @@
   </div>
 
   <div class="banner">
+    <strong>Actualizar Información Personal:</strong>
+    <ion-button
+      class="btn-update"
+      expand="block"
+      routerLink="/actualizar-informacion-personal"
+    >
+      <ion-icon name="person-outline" slot="end"></ion-icon>Actualizar
+      Información
+    </ion-button>
+  </div>
+
+  <div class="banner">
     <strong>¿Ya te vas?</strong>
-    <ion-button class="btn-logout" expand="block" routerLink="/">
+    <ion-button class="btn-logout" expand="block" (click)="logout()">
       <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
     </ion-button>
   </div>

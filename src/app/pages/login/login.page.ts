@@ -51,51 +51,89 @@ export class LoginPage implements OnInit {
       );
 
       if (usuarioLogeado.user) {
-        const loading = await this.loadingController.create({
-          message: 'Cargando......',
-          duration: 2000,
-        });
-
-        await loading.present();
-
-        const usuario = await this.firestore
-          .collection('usuarios')
-          .doc(usuarioLogeado.user.uid)
-          .get()
-          .toPromise();
-        const userData = usuario?.data() as Usuario;
-
-        setTimeout(async () => {
-          await loading.dismiss();
-
-          if (userData.tipo === 'admin') {
-            this.router.navigate(['/admin-dashboard']);
-          } else if (userData.tipo === 'alumno') {
-            this.router.navigate(['/invitado-dashboard']);
-          } else if (userData.tipo === 'profesor') {
-            this.router.navigate(['/usuario-profesor']);
-          } else {
-            this.router.navigate(['/home']);
-          }
-        }, 2000);
+        await this.handleLoginSuccess(usuarioLogeado);
       }
     } catch (error) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'bottom-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Acceso denegado! credenciales no válidas.',
-      });
+      this.handleLoginError(error);
     }
+  }
+
+  async loginWithGoogle() {
+    try {
+      const usuarioLogeado = await this.authService.loginWithGoogle();
+      if (usuarioLogeado.user) {
+        await this.handleLoginSuccess(usuarioLogeado, true);
+      }
+    } catch (error) {
+      this.handleLoginError(error);
+    }
+  }
+
+  async loginWithGitHub() {
+    try {
+      const usuarioLogeado = await this.authService.loginWithGitHub();
+      if (usuarioLogeado.user) {
+        await this.handleLoginSuccess(usuarioLogeado, true);
+      }
+    } catch (error) {
+      this.handleLoginError(error);
+    }
+  }
+
+  private async handleLoginSuccess(
+    usuarioLogeado: any,
+    isSocialLogin: boolean = false
+  ) {
+    const loading = await this.loadingController.create({
+      message: 'Cargando......',
+      duration: 2000,
+    });
+
+    await loading.present();
+
+    const usuario = await this.firestore
+      .collection('usuarios')
+      .doc(usuarioLogeado.user.uid)
+      .get()
+      .toPromise();
+    const userData = usuario?.data() as Usuario;
+
+    setTimeout(async () => {
+      await loading.dismiss();
+
+      if (isSocialLogin) {
+        this.router.navigate(['/invitado-dashboard']);
+      } else {
+        if (userData.tipo === 'admin') {
+          this.router.navigate(['/admin-dashboard']);
+        } else if (userData.tipo === 'alumno') {
+          this.router.navigate(['/invitado-dashboard']);
+        } else if (userData.tipo === 'profesor') {
+          this.router.navigate(['/usuario-profesor']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      }
+    }, 2000);
+  }
+
+  private handleLoginError(error: any) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    Toast.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Acceso denegado! credenciales no válidas.',
+    });
+    console.error('Error al iniciar sesión:', error);
   }
 }

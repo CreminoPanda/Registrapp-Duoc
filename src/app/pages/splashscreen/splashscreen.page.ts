@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { NativeBiometric } from 'capacitor-native-biometric';
-import { Usuario } from 'src/app/interfaces/usuario';
 import { AuthService } from 'src/app/services/firebase/auth.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Usuario } from 'src/app/interfaces/usuario';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-splashscreen',
@@ -14,20 +14,21 @@ export class SplashscreenPage implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private loadingController: LoadingController
   ) {}
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.checkLogin();
-    }, 2000);
-  }
-
-  async checkLogin() {
-    this.authService.isLogged().subscribe(async (user) => {
+  async ngOnInit() {
+    setTimeout(async () => {
+      const user = await this.authService.checkSessionWithFingerprint();
       if (user) {
         try {
-          await this.checkHuellaDigital();
+          const loading = await this.loadingController.create({
+            message: 'Cargando......',
+            duration: 2000,
+          });
+
+          await loading.present();
 
           const usuario = await this.firestore
             .collection('usuarios')
@@ -36,36 +37,26 @@ export class SplashscreenPage implements OnInit {
             .toPromise();
           const userData = usuario?.data() as Usuario;
 
-          if (userData) {
+          setTimeout(async () => {
+            await loading.dismiss();
+
             if (userData.tipo === 'admin') {
               this.router.navigate(['/admin-dashboard']);
-            } else if (userData.tipo === 'profesor') {
-              this.router.navigate(['/usuario-profesor']);
             } else if (userData.tipo === 'alumno') {
               this.router.navigate(['/invitado-dashboard']);
+            } else if (userData.tipo === 'profesor') {
+              this.router.navigate(['/usuario-profesor']);
             } else {
-              this.router.navigate(['home']);
+              this.router.navigate(['/home']);
             }
-          }
+          }, 2000);
         } catch (error) {
-          this.router.navigate(['login']);
+          console.error('Error al obtener datos del usuario', error);
+          this.router.navigate(['/home']);
         }
       } else {
-        this.router.navigate(['home']);
+        this.router.navigate(['/home']);
       }
-    });
-  }
-
-  async checkHuellaDigital() {
-    try {
-      await NativeBiometric.verifyIdentity({
-        reason: 'Por favor, autentícate para continuar',
-        title: 'Autenticación Biométrica',
-        subtitle: 'Usa tu huella digítal o Face ID',
-        description: 'Coloca tu huella en el sensor para ingresar.',
-      });
-    } catch (error) {
-      throw error;
-    }
+    }, 2000);
   }
 }

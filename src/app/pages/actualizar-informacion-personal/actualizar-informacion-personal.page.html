@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navigateBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title size="large">Actualizar Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="fondo">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Actualizar Usuario</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content [formGroup]="updateForm">
+        <ion-item>
+          <ion-input
+            formControlName="nombre"
+            [(ngModel)]="usuario.nombre"
+            type="text"
+            label="Nombre"
+            labelPlacement="floating"
+            placeholder="Ej: Alvaro"
+          ></ion-input>
+        </ion-item>
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('nombre')?.hasError('required')"
+          >El nombre es requerido.</ion-text
+        >
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('nombre')?.hasError('pattern')"
+          >El nombre solo puede contener letras.</ion-text
+        >
+
+        <ion-item>
+          <ion-input
+            formControlName="apellido"
+            [(ngModel)]="usuario.apellido"
+            type="text"
+            label="Apellido"
+            labelPlacement="floating"
+            placeholder="Ej: Sepulveda"
+          ></ion-input>
+        </ion-item>
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('apellido')?.hasError('required')"
+          >El apellido es requerido.</ion-text
+        >
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('apellido')?.hasError('pattern')"
+          >El apellido solo puede contener letras.</ion-text
+        >
+
+        <ion-item>
+          <ion-input
+            formControlName="email"
+            [(ngModel)]="usuario.email"
+            type="email"
+            label="Correo"
+            labelPlacement="floating"
+            placeholder="Ej: correo@correo.cl"
+          ></ion-input>
+        </ion-item>
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('email')?.hasError('required')"
+          >El email es requerido.</ion-text
+        >
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('email')?.hasError('email')"
+          >El email es inválido.</ion-text
+        >
+
+        <ion-item>
+          <ion-input
+            formControlName="rut"
+            [(ngModel)]="usuario.rut"
+            type="text"
+            label="Rut"
+            labelPlacement="floating"
+            placeholder="Ej: 12345678-9"
+          ></ion-input>
+        </ion-item>
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('rut')?.hasError('required')"
+          >El rut es requerido.</ion-text
+        >
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('rut')?.hasError('pattern')"
+          >El rut es inválido.</ion-text
+        >
+
+        <ion-item *ngIf="usuario.tipo === 'admin'">
+          <ion-label>Tipo de Usuario</ion-label>
+          <ion-select
+            formControlName="tipo"
+            [(ngModel)]="usuario.tipo"
+            placeholder="Selecciona un tipo"
+          >
+            <ion-select-option value="admin">Administrador</ion-select-option>
+            <ion-select-option value="alumno">Alumno</ion-select-option>
+            <ion-select-option value="profesor">Docente</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text
+          position="stacked"
+          color="danger"
+          *ngIf="updateForm.get('tipo')?.hasError('required')"
+          >El tipo de usuario es requerido.</ion-text
+        >
+
+        <ion-button expand="block" type="submit" (click)="actualizarUsuario()"
+          >Modificar</ion-button
+        >
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

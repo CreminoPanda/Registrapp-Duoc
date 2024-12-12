@@ -1,25 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import Swal from 'sweetalert2';
 import * as qrcode from 'qrcode';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-generar-qr',
   templateUrl: './generar-qr.page.html',
   styleUrls: ['./generar-qr.page.scss'],
 })
-export class GenerarQrPage implements OnInit {
+export class GenerarQrPage implements OnInit, OnDestroy {
   seccionUid: string = '';
   alumnos: any[] = [];
   qrCode: string = '';
   asistenciaUid: string = ''; // UID de la asistencia actual
+  asistenciaSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private asignaturaService: AsignaturaService,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -31,6 +34,13 @@ export class GenerarQrPage implements OnInit {
     }
     this.cargarAlumnos();
     this.recuperarEstadoAsistencia();
+    this.suscribirseCambiosAsistencia();
+  }
+
+  ngOnDestroy() {
+    if (this.asistenciaSubscription) {
+      this.asistenciaSubscription.unsubscribe();
+    }
   }
 
   cargarAlumnos() {
@@ -53,7 +63,7 @@ export class GenerarQrPage implements OnInit {
   }
 
   suscribirseCambiosAsistencia() {
-    this.firestore
+    this.asistenciaSubscription = this.firestore
       .collection('asistencias', (ref) =>
         ref.where('seccionUid', '==', this.seccionUid)
       )
@@ -122,12 +132,12 @@ export class GenerarQrPage implements OnInit {
   }
 
   async actualizarAsistencia() {
-    this.alumnos.forEach((alumno) => {
-      this.marcarAsistencia(alumno);
-    });
+    const presentes = this.alumnos.filter((alumno) => alumno.presente);
+    const ausentes = this.alumnos.filter((alumno) => !alumno.presente);
+
     await Swal.fire({
       title: 'Asistencia actualizada',
-      text: 'La asistencia ha sido actualizada exitosamente',
+      html: `<p>Presentes: ${presentes.length}</p><p>Ausentes: ${ausentes.length}</p>`,
       icon: 'success',
       confirmButtonText: 'OK',
       heightAuto: false,
@@ -156,6 +166,7 @@ export class GenerarQrPage implements OnInit {
         confirmButtonText: 'OK',
         heightAuto: false,
       });
+      this.router.navigate(['/invitado-profesor']); // Redirigir a la página de invitado-profesor
     } catch (error: any) {
       await Swal.fire({
         title: 'Error',

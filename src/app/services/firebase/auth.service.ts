@@ -3,45 +3,73 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 import firebase from 'firebase/compat/app';
+import { NativeBiometric } from 'capacitor-native-biometric';
+import { Storage } from '@ionic/storage-angular';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
   constructor(
     private angularFireAuth: AngularFireAuth,
-    private firestore: AngularFirestore
-  ) { }
+    private firestore: AngularFirestore,
+    private storage: Storage,
+    private alertController: AlertController
+  ) {}
 
-  login(email: string, pass: string) {
-    return this.angularFireAuth.signInWithEmailAndPassword(email, pass);
+  async login(email: string, password: string): Promise<any> {
+    await this.checkHuellaDigital();
+    const userCredential =
+      await this.angularFireAuth.signInWithEmailAndPassword(email, password);
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ uid: userCredential.user?.uid, email, password })
+    );
+    return userCredential;
   }
 
-  loginWithGoogle() {
-    return this.angularFireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .catch(error => {
+  async loginWithGoogle() {
+    await this.checkHuellaDigital();
+    return this.angularFireAuth
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .catch((error) => {
         console.error('Error al autenticar con Google: ', error);
         throw error;
-      })
+      });
   }
 
-  loginWithGitHub() {
+  async loginWithGitHub() {
+    await this.checkHuellaDigital();
     const provider = new firebase.auth.GithubAuthProvider();
-    return this.angularFireAuth.signInWithPopup(provider)
-      .then(result => {
+    return this.angularFireAuth
+      .signInWithPopup(provider)
+      .then((result) => {
         console.log('Autenticado con GitHub: ', result);
         return result;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error al autenticar con GitHub: ', error);
         throw error;
-      })
+      });
   }
 
   isLogged(): Observable<any> {
     return this.angularFireAuth.authState.pipe(
-      map((user) => (user ? user.uid : null))
+      map((user) => {
+        if (user) {
+          // Guardar el uid y el email del usuario en localStorage
+          localStorage.setItem(
+            'user',
+            JSON.stringify({ uid: user.uid, email: user.email })
+          );
+          return user.uid; // Retornar el uid del usuario autenticado
+        } else {
+          // Eliminar la información del usuario de localStorage si no hay usuario autenticado
+          localStorage.removeItem('user');
+          return null;
+        }
+      })
     );
   }
 
@@ -50,6 +78,7 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.removeItem('user');
     return this.angularFireAuth.signOut();
   }
 
@@ -63,5 +92,68 @@ export class AuthService {
         console.log('No se pudo enviar el correo!');
         throw error;
       });
+  }
+
+  async checkHuellaDigital() {
+    try {
+      const result = await NativeBiometric.isAvailable();
+      if (result.isAvailable) {
+        await NativeBiometric.verifyIdentity({
+          reason: 'Por favor, autentícate para continuar',
+          title: 'Autenticación Biométrica',
+          subtitle: 'Usa tu huella digítal o Face ID',
+          description: 'Coloca tu huella en el sensor para ingresar.',
+        });
+      } else {
+        throw new Error('Autenticación biométrica no disponible');
+      }
+    } catch (error) {
+      // Si la autenticación biométrica falla, usar el método de protección del dispositivo
+      try {
+        await NativeBiometric.verifyIdentity({
+          reason: 'Por favor, autentícate para continuar',
+          title: 'Autenticación del Dispositivo',
+          subtitle: 'Usa tu PIN, contraseña o patrón',
+          description:
+            'Usa el método de protección de tu dispositivo para ingresar.',
+        });
+      } catch (error) {
+        throw new Error('Autenticación fallida');
+      }
+    }
+  }
+
+  async autoLogin(): Promise<any> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      try {
+        const userCredential =
+          await this.angularFireAuth.signInWithEmailAndPassword(
+            userData.email,
+            userData.password
+          );
+        return userCredential.user;
+      } catch (error) {
+        console.error('Error al iniciar sesión automáticamente', error);
+        this.logout();
+        return null;
+      }
+    }
+    return null;
+  }
+  async checkSessionWithFingerprint(): Promise<any> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        await this.checkHuellaDigital();
+        return JSON.parse(user);
+      } catch (error) {
+        console.error('Autenticación por huella digital fallida', error);
+        this.logout();
+        return null;
+      }
+    }
+    return null;
   }
 }

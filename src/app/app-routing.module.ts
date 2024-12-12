@@ -45,13 +45,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'usuario-dashboard',
-    loadChildren: () =>
-      import('./pages/usuario/dashboard/dashboard.module').then(
-        (m) => m.DashboardPageModule
-      ),
-  },
-  {
     path: 'invitado-dashboard',
     loadChildren: () =>
       import('./pages/invitado/dashboard/dashboard.module').then(
@@ -197,11 +190,21 @@ const routes: Routes = [
       import(
         './pages/usuario/ver-clases-pendientes/ver-clases-pendientes.module'
       ).then((m) => m.VerClasesPendientesPageModule),
-  },  {
-    path: 'geolocalizacion',
-    loadChildren: () => import('./pages/geolocalizacion/geolocalizacion.module').then( m => m.GeolocalizacionPageModule)
   },
-
+  {
+    path: 'geolocalizacion',
+    loadChildren: () =>
+      import('./pages/geolocalizacion/geolocalizacion.module').then(
+        (m) => m.GeolocalizacionPageModule
+      ),
+  },
+  {
+    path: 'actualizar-informacion-personal',
+    loadChildren: () =>
+      import(
+        './pages/actualizar-informacion-personal/actualizar-informacion-personal.module'
+      ).then((m) => m.ActualizarInformacionPersonalPageModule),
+  },
 ];
 
 @NgModule({

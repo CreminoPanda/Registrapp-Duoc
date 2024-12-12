@@ -12,12 +12,14 @@ export class ProfesorPage implements OnInit {
 
   ngOnInit() {}
 
-  async logout() {
-    try {
-      await this.auth.logout();
-      this.router.navigate(['/home']);
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
+  logout() {
+    this.auth
+      .logout()
+      .then(() => {
+        this.router.navigate(['/home']);
+      })
+      .catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+      });
   }
 }
