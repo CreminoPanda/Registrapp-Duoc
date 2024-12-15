@@ -1,20 +1,45 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/usuario-profesor">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Secciones</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let seccion of secciones">
-      <ion-label>
-        <h2>{{ seccion.nombre }}</h2>
-        <p>Cupos: {{ seccion.cupos }}</p>
-      </ion-label>
-      <ion-button (click)="irAGenerarQR(seccion.uid)">Generar QR</ion-button>
-      <ion-button (click)="irAClasesPendientes(seccion.uid)"
-        >Ver Clases Pendientes</ion-button
-      >
-    </ion-item>
-  </ion-list>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Secciones Disponibles</strong>
+      <p>
+        A continuación se muestra la lista de secciones disponibles. Puedes
+        generar un código QR para cada sección o ver las clases pendientes.
+      </p>
+    </div>
+
+    <ion-list>
+      <ion-item *ngFor="let seccion of secciones">
+        <ion-label class="seccion-label">
+          <h2>{{ seccion.nombre }}</h2>
+          <p>Cupos: {{ seccion.cupos }}</p>
+        </ion-label>
+        <div class="button-container">
+          <ion-button
+            size="small"
+            expand="block"
+            (click)="irAGenerarQR(seccion.uid)"
+            >Generar QR</ion-button
+          >
+          <ion-button
+            size="small"
+            expand="block"
+            (click)="irAClasesPendientes(seccion.uid)"
+            >Ver Clases Pendientes</ion-button
+          >
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

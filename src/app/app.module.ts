@@ -14,8 +14,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage-angular';
-
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,11 +26,9 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
     AngularFireAuthModule,
     AngularFirestoreModule,
     IonicStorageModule.forRoot(),
+    HttpClientModule,
   ],
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    InAppBrowser, // Añadir esta línea
-  ],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

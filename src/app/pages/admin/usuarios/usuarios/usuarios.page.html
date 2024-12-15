@@ -5,24 +5,29 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-button expand="block" (click)="navigateToUserType('profesor')">
-    Docentes
-  </ion-button>
-  <ion-button expand="block" (click)="navigateToUserType('alumno')">
-    Alumnos
-  </ion-button>
-  <ion-button expand="block" (click)="navigateToUserType('admin')">
-    Administradores
-  </ion-button>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Gestión de Usuarios</strong>
+      <p>Selecciona el tipo de usuario que deseas gestionar</p>
+    </div>
+    <div class="banner">
+      <ion-button expand="block" (click)="navigateToUserType('profesor')">
+        Docentes
+      </ion-button>
+    </div>
+    <div class="banner">
+      <ion-button expand="block" (click)="navigateToUserType('alumno')">
+        Alumnos
+      </ion-button>
+    </div>
+    <div class="banner">
+      <ion-button expand="block" (click)="navigateToUserType('admin')">
+        Administradores
+      </ion-button>
+    </div>
+  </div>
 </ion-content>
-
-<div class="banner">
-  <ion-button class="btn-logout" expand="block" (click)="logout()">
-    <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
-  </ion-button>
-</div>

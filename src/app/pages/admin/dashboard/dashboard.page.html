@@ -1,23 +1,23 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Administrador</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="body">
-  <ion-button class="btn" expand="block" routerLink="/usuarios">
-    Ir a Usuarios
-  </ion-button>
-  <ion-button expand="full" routerLink="/asignaturas">
-    Crear Asignatura
-  </ion-button>
-  <div class="banner">
-    <ion-button class="btn-logout" expand="block" (click)="logout()">
-      <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
-    </ion-button>
+<ion-content>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Panel de Administración</strong>
+      <p>Gestiona los usuarios y asignaturas desde aquí</p>
+    </div>
+    <div class="banner">
+      <ion-button class="btn" expand="block" routerLink="/usuarios">
+        Ir a Usuarios
+      </ion-button>
+    </div>
+    <div class="banner">
+      <ion-button expand="full" routerLink="/asignaturas">
+        Crear Asignatura
+      </ion-button>
+    </div>
+    <div class="banner">
+      <ion-button class="btn-logout" expand="block" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
+      </ion-button>
+    </div>
   </div>
 </ion-content>
-

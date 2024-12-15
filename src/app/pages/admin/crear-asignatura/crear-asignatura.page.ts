@@ -21,6 +21,8 @@ export class CrearAsignaturaPage implements OnInit {
         title: 'Error',
         text: 'El nombre de la asignatura no puede estar vacío',
         icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false,
       });
       return;
     }
@@ -34,6 +36,8 @@ export class CrearAsignaturaPage implements OnInit {
         title: 'Error',
         text: 'No puedes crear una asignatura ya existente',
         icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false,
       });
       return;
     }
@@ -51,6 +55,8 @@ export class CrearAsignaturaPage implements OnInit {
           title: 'Asignatura creada',
           text: 'La asignatura ha sido creada exitosamente',
           icon: 'success',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
         this.nombreAsignatura = ''; // Limpiar el campo después de crear la asignatura
       })
@@ -59,6 +65,8 @@ export class CrearAsignaturaPage implements OnInit {
           title: 'Error',
           text: 'Error al crear la asignatura',
           icon: 'error',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
         console.error('Error al crear la asignatura:', error);
       });

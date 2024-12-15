@@ -1,26 +1,64 @@
-.header {
-    text-align: center;
-    padding-top: 1rem;
-}
+ion-content {
+  --background: #ffffff;
+  --padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 
-.banner {
-    padding: 10px 20px;
-    text-align: center;
-    background-color: #fff;
-    color: #042c54;
+  .content-wrapper {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .btn-logout {
-        --background: #FF5733; // Rojo anaranjado
-        --color: #fff;
-        --border-radius: 5px;
+  .intro {
+    padding: 20px;
+    text-align: center;
+
+    strong {
+      font-size: 1.5rem;
+      color: #003366;
     }
 
-}
+    p {
+      font-size: 1rem;
+      margin-top: 10px;
+      color: #333;
+    }
+  }
 
-.btn {
-    padding-top: 1rem;
-}
+  .banner {
+    padding: 10px 20px;
+    text-align: center;
+    width: 100%;
 
-.body{
-    --background: #fff;
+    strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #003366;
+    }
+
+    .btn-scan {
+      --background: #ffd700;
+      --color: #000;
+      --border-radius: 5px;
+    }
+
+    .btn-update {
+      --background: #4caf50;
+      --color: #fff;
+      --border-radius: 5px;
+    }
+
+    .btn-logout {
+      --background: #ff5733;
+      --color: #fff;
+      --border-radius: 5px;
+    }
+  }
 }

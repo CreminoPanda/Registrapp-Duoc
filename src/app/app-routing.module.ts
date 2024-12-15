@@ -129,13 +129,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'confirmar-asistencia',
-    loadChildren: () =>
-      import(
-        './pages/invitado/confirmar-asistencia/confirmar-asistencia.module'
-      ).then((m) => m.ConfirmarAsistenciaPageModule),
-  },
-  {
     path: 'generar-qr/:seccionUid',
     loadChildren: () =>
       import('./pages/usuario/generar-qr/generar-qr.module').then(

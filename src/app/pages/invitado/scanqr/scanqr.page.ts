@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
 import Swal from 'sweetalert2';
-import { AuthService } from 'src/app/services/firebase/auth.service'; // Asegúrate de tener un servicio de autenticación
+import { AuthService } from 'src/app/services/firebase/auth.service';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
@@ -13,7 +13,7 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 export class ScanQrPage implements OnInit {
   seccionUid: string = '';
   alumnoUid: string = '';
-  asistenciaUid: string = ''; // UID de la asistencia actual
+  asistenciaUid: string = '';
   profesor: any = {};
   seccion: any = {};
   asignatura: any = {};
@@ -21,7 +21,7 @@ export class ScanQrPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private asignaturaService: AsignaturaService,
-    private authService: AuthService // Servicio de autenticación
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class ScanQrPage implements OnInit {
       const qrContent = barcodes[0].rawValue;
       const qrData = JSON.parse(qrContent);
       this.seccionUid = qrData.seccionUid;
-      this.asistenciaUid = qrData.asistenciaUid; // Obtener el asistenciaUid del QR
+      this.asistenciaUid = qrData.asistenciaUid;
       await this.obtenerAsistenciaUid();
       await this.cargarDatosSeccion();
 

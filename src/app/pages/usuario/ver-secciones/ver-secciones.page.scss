@@ -1,0 +1,94 @@
+@import "~mapbox-gl/dist/mapbox-gl.css";
+
+ion-content {
+  --background: #ffffff; // Fondo blanco
+  --padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Asegura que el contenedor ocupe toda la altura de la pantalla
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 700px; // Ajusta el ancho máximo según sea necesario
+    padding: 0px;
+  }
+
+  .intro {
+    padding: 20px;
+    text-align: center;
+
+    strong {
+      font-size: 1.2rem; // Ajusta el tamaño de la fuente
+      color: #003366; // Azul oscuro
+    }
+
+    p {
+      font-size: 0.9rem; // Ajusta el tamaño de la fuente
+      margin-top: 10px;
+      color: #333;
+    }
+  }
+
+  .banner {
+    padding: 10px 20px;
+    text-align: center;
+
+    strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #003366; // Azul oscuro
+    }
+
+    ion-list {
+      width: 100%;
+    }
+
+    ion-item {
+      --background: #f9f9f9; // Fondo claro para los items
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ion-button {
+      --background: #4caf50; // Verde
+      --color: #fff;
+      --border-radius: 5px;
+      font-size: 0.9rem; // Ajusta el tamaño de la fuente
+      padding: 8px 16px; // Ajusta el padding para hacer los botones más pequeños
+    }
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+
+    ion-button {
+      margin-top: 10px;
+      --background: #4caf50; // Verde
+      --color: #fff;
+      --border-radius: 5px;
+      font-size: 0.9rem; // Ajusta el tamaño de la fuente
+      padding: 8px 16px; // Ajusta el padding para hacer los botones más pequeños
+    }
+  }
+
+  .seccion-label {
+    padding: 20px;
+    text-align: left;
+
+    h2 {
+      font-size: 1.2rem; // Ajusta el tamaño de la fuente
+      color: #003366; // Azul oscuro
+    }
+
+    p {
+      font-size: 1rem; // Ajusta el tamaño de la fuente
+      margin-top: 10px;
+      color: #333;
+    }
+  }
+}

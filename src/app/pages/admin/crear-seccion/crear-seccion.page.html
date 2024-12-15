@@ -1,35 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Administrador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-  <ion-item>
-    <ion-label position="floating">Nombre de la Sección</ion-label> <br />
-    <ion-text>{{ nombreSeccion }}</ion-text>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Cupos</ion-label>
-    <ion-input type="number" [(ngModel)]="cupos"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>Seleccionar Alumnos</ion-label>
-    <ion-select [(ngModel)]="alumnosSeleccionados" multiple="true">
-      <ion-select-option
-        *ngFor="let alumno of alumnosNoAsignados"
-        [value]="alumno.uid"
-      >
-        {{ alumno.nombre }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Seleccionar Profesor</ion-label>
-    <ion-select [(ngModel)]="profesorSeleccionado">
-      <ion-select-option
-        *ngFor="let profesor of profesoresDisponibles"
-        [value]="profesor.uid"
-      >
-        {{ profesor.nombre }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-button expand="full" (click)="agregarSeccion()"
-    >Crear Sección</ion-button
-  >
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Crear Sección</strong>
+      <p>Completa los detalles para crear una nueva sección</p>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label position="floating">Nombre de la Sección</ion-label><br />
+        <ion-text>{{ nombreSeccion }}</ion-text>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label position="floating">Cupos</ion-label>
+        <ion-input type="number" [(ngModel)]="cupos"></ion-input>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label>Seleccionar Alumnos</ion-label>
+        <ion-select [(ngModel)]="alumnosSeleccionados" multiple="true">
+          <ion-select-option
+            *ngFor="let alumno of alumnosNoAsignados"
+            [value]="alumno.uid"
+          >
+            {{ alumno.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label>Seleccionar Profesor</ion-label>
+        <ion-select [(ngModel)]="profesorSeleccionado">
+          <ion-select-option
+            *ngFor="let profesor of profesoresDisponibles"
+            [value]="profesor.uid"
+          >
+            {{ profesor.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-button expand="full" (click)="agregarSeccion()">
+        Crear Sección
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

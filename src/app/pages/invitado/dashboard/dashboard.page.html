@@ -9,7 +9,12 @@
 
   <div class="banner">
     <strong>Escanea ahora!:</strong>
-    <ion-button class="btn-scan" expand="block" routerLink="/scanqr">
+    <ion-button
+      class="btn-scan"
+      expand="block"
+      routerLink="/scanqr"
+      [disabled]="!isWithinRange"
+    >
       <ion-icon name="qr-code-outline" slot="end"></ion-icon>Abrir Escáner QR
     </ion-button>
   </div>
@@ -27,9 +32,15 @@
   </div>
 
   <div class="banner">
-    <strong>¿Ya te vas?</strong>
-    <ion-button class="btn-logout" expand="block" (click)="logout()">
-      <ion-icon name="log-out-outline" slot="end"></ion-icon>Cerrar sesión
+    <ion-button (click)="requestLocationPermissions()">
+      Solicitar Permisos de Ubicación
+    </ion-button>
+    <div id="map" style="height: 300px"></div>
+  </div>
+
+  <div class="banner">
+    <ion-button class="btn-logout" (click)="logout()">
+      Cerrar Sesión
     </ion-button>
   </div>
 </ion-content>

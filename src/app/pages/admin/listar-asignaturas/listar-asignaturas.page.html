@@ -1,18 +1,29 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Listar Asignaturas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let asignatura of asignaturas">
-      <ion-label>
-        <h2>{{ asignatura.nombre }}</h2>
-      </ion-label>
-      <ion-button slot="end" (click)="irACrearSeccion(asignatura.uid)">
-        Crear Sección
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Listar Asignaturas</strong>
+      <p>Gestiona las asignaturas desde aquí</p>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let asignatura of asignaturas">
+        <ion-label>
+          <h2>{{ asignatura.nombre }}</h2>
+        </ion-label>
+        <ion-button slot="end" (click)="irACrearSeccion(asignatura.uid)">
+          Crear Sección
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

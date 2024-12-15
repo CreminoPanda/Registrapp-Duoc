@@ -1,16 +1,32 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/usuario-profesor">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Cursos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let asignatura of asignaturas">
-      {{ asignatura.nombre }}
-      <ion-button slot="end" (click)="verSecciones(asignatura.uid)"
-        >Ver Secciones</ion-button
-      >
-    </ion-item>
-  </ion-list>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Cursos</strong>
+      <p>Lista de asignaturas disponibles</p>
+    </div>
+
+    <div class="banner">
+      <ion-list>
+        <ion-item *ngFor="let asignatura of asignaturas">
+          <ion-label>
+            <h2>{{ asignatura.nombre }}</h2>
+          </ion-label>
+          <ion-button slot="end" (click)="verSecciones(asignatura.uid)"
+            >Ver Secciones</ion-button
+          >
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
 </ion-content>

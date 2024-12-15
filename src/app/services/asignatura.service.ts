@@ -96,17 +96,8 @@ export class AsignaturaService {
     profesorUid: string
   ): Promise<void> {
     const seccionId = this.firestore.createId();
-    return this.firestore
-      .collection('secciones')
-      .doc(seccionId)
-      .set({ ...seccion, uid: seccionId, asignaturaId, profesorUid })
-      .then(() => {
-        return this.asignarAlumnosASeccion(
-          asignaturaId,
-          seccionId,
-          seccion.cupos
-        );
-      });
+    seccion.uid = seccionId;
+    return this.firestore.collection('secciones').doc(seccionId).set(seccion);
   }
 
   private asignarAlumnosASeccion(

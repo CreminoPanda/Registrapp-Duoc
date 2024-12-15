@@ -11,6 +11,8 @@ import { AlertController } from '@ionic/angular';
   providedIn: 'root',
 })
 export class AuthService {
+  private isDevelopmentMode: boolean = false; // Cambia esto a false en producción
+
   constructor(
     private angularFireAuth: AngularFireAuth,
     private firestore: AngularFirestore,
@@ -19,7 +21,9 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string): Promise<any> {
-    await this.checkHuellaDigital();
+    if (!this.isDevelopmentMode) {
+      await this.checkHuellaDigital();
+    }
     const userCredential =
       await this.angularFireAuth.signInWithEmailAndPassword(email, password);
     localStorage.setItem(
@@ -30,7 +34,9 @@ export class AuthService {
   }
 
   async loginWithGoogle() {
-    await this.checkHuellaDigital();
+    if (!this.isDevelopmentMode) {
+      await this.checkHuellaDigital();
+    }
     return this.angularFireAuth
       .signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .catch((error) => {
@@ -40,7 +46,9 @@ export class AuthService {
   }
 
   async loginWithGitHub() {
-    await this.checkHuellaDigital();
+    if (!this.isDevelopmentMode) {
+      await this.checkHuellaDigital();
+    }
     const provider = new firebase.auth.GithubAuthProvider();
     return this.angularFireAuth
       .signInWithPopup(provider)
@@ -58,14 +66,12 @@ export class AuthService {
     return this.angularFireAuth.authState.pipe(
       map((user) => {
         if (user) {
-          // Guardar el uid y el email del usuario en localStorage
           localStorage.setItem(
             'user',
             JSON.stringify({ uid: user.uid, email: user.email })
           );
-          return user.uid; // Retornar el uid del usuario autenticado
+          return user.uid;
         } else {
-          // Eliminar la información del usuario de localStorage si no hay usuario autenticado
           localStorage.removeItem('user');
           return null;
         }
@@ -108,7 +114,6 @@ export class AuthService {
         throw new Error('Autenticación biométrica no disponible');
       }
     } catch (error) {
-      // Si la autenticación biométrica falla, usar el método de protección del dispositivo
       try {
         await NativeBiometric.verifyIdentity({
           reason: 'Por favor, autentícate para continuar',
@@ -142,11 +147,14 @@ export class AuthService {
     }
     return null;
   }
+
   async checkSessionWithFingerprint(): Promise<any> {
     const user = localStorage.getItem('user');
     if (user) {
       try {
-        await this.checkHuellaDigital();
+        if (!this.isDevelopmentMode) {
+          await this.checkHuellaDigital();
+        }
         return JSON.parse(user);
       } catch (error) {
         console.error('Autenticación por huella digital fallida', error);

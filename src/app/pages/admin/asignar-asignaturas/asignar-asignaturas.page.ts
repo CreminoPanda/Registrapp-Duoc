@@ -48,6 +48,8 @@ export class AsignarAsignaturasPage implements OnInit {
         title: 'Error',
         text: 'Debe seleccionar una asignatura y un profesor',
         icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false,
       });
       return;
     }
@@ -59,6 +61,8 @@ export class AsignarAsignaturasPage implements OnInit {
           title: 'Asignatura asignada',
           text: 'La asignatura ha sido asignada exitosamente',
           icon: 'success',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
       })
       .catch((error) => {
@@ -66,6 +70,8 @@ export class AsignarAsignaturasPage implements OnInit {
           title: 'Error',
           text: error,
           icon: 'error',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
         console.error('Error al asignar la asignatura:', error);
       });

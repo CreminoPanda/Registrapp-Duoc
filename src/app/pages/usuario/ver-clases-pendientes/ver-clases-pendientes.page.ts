@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AsignaturaService } from 'src/app/services/asignatura.service';
 
 @Component({
   selector: 'app-ver-clases-pendientes',
@@ -10,16 +11,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class VerClasesPendientesPage implements OnInit {
   seccionUid: string = '';
   clasesPendientes: any[] = [];
+  nombreSeccion: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private firestore: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private asignaturaService: AsignaturaService
   ) {}
 
   ngOnInit() {
     this.seccionUid = this.route.snapshot.paramMap.get('seccionUid') || '';
+    this.obtenerNombreSeccion();
     this.cargarClasesPendientes();
+  }
+
+  obtenerNombreSeccion() {
+    this.asignaturaService
+      .obtenerDetalleSeccion(this.seccionUid)
+      .then((detalle) => {
+        this.nombreSeccion = detalle.seccion.nombre;
+      })
+      .catch((error) => {
+        console.error('Error al obtener el nombre de la sección:', error);
+      });
   }
 
   cargarClasesPendientes() {
@@ -29,16 +44,17 @@ export class VerClasesPendientesPage implements OnInit {
           .where('seccionUid', '==', this.seccionUid)
           .where('terminado', '==', false)
       )
-      .snapshotChanges() // Usar snapshotChanges para obtener el ID del documento
+      .snapshotChanges()
       .subscribe((snapshot) => {
         this.clasesPendientes = snapshot.map((doc) => {
-          const data = doc.payload.doc.data() as any; // Asegurarse de que data es un objeto
+          const data = doc.payload.doc.data() as any;
           return {
             ...data,
-            asistenciaUid: doc.payload.doc.id, // Incluir el ID del documento como asistenciaUid
+            asistenciaUid: doc.payload.doc.id,
+            nombreSeccion: this.nombreSeccion,
           };
         });
-        console.log(this.clasesPendientes); // Verificar los datos
+        console.log(this.clasesPendientes);
       });
   }
 

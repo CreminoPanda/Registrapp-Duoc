@@ -1,32 +1,54 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/usuario-profesor">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Generar QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let alumno of alumnos">
-      <ion-label>
-        <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
-      </ion-label>
-      <ion-select
-        [(ngModel)]="alumno.presente"
-        (ionChange)="marcarAsistencia(alumno)"
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Generar QR</ion-card-title>
+      <ion-card-subtitle
+        >Gestiona la asistencia de tus alumnos</ion-card-subtitle
       >
-        <ion-select-option [value]="false">Ausente</ion-select-option>
-        <ion-select-option [value]="true">Presente</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-  <ion-button expand="full" (click)="generarQR()">Generar QR</ion-button>
-  <ion-button expand="full" (click)="actualizarAsistencia()"
-    >Actualizar Asistencia</ion-button
-  >
-  <ion-button expand="full" (click)="finalizarClase()"
-    >Finalizar Clase</ion-button
-  >
-  <div *ngIf="qrCode">
-    <img [src]="qrCode" alt="QR Code" />
-  </div>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let alumno of alumnos">
+          <ion-label>
+            <h2>{{ alumno.nombre }} {{ alumno.apellido }}</h2>
+          </ion-label>
+          <ion-select
+            [(ngModel)]="alumno.presente"
+            (ionChange)="marcarAsistencia(alumno)"
+          >
+            <ion-select-option [value]="false">Ausente</ion-select-option>
+            <ion-select-option [value]="true">Presente</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-button class="btn-generar-qr" expand="full" (click)="generarQR()"
+        >Generar QR</ion-button
+      >
+      <ion-button expand="full" (click)="actualizarAsistencia()"
+        >Actualizar Asistencia</ion-button
+      >
+      <ion-button
+        class="btn-finalizar-clase"
+        expand="full"
+        (click)="finalizarClase()"
+        [disabled]="claseTerminada"
+        >Finalizar Clase</ion-button
+      >
+      <div *ngIf="qrCode" class="center-content">
+        <img [src]="qrCode" alt="QR Code" />
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

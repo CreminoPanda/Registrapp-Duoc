@@ -1,3 +1,60 @@
-ion-list {
-    padding-top: 3rem;
+@import "~mapbox-gl/dist/mapbox-gl.css";
+
+ion-content {
+  --background: #ffffff;
+  --padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 700px;
+    padding: 0px;
+  }
+
+  .intro {
+    padding: 20px;
+    text-align: center;
+
+    strong {
+      font-size: 1.5rem;
+      color: #003366;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-top: 10px;
+      color: #333;
+    }
+  }
+
+  .banner {
+    padding: 10px 20px;
+    text-align: center;
+
+    strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #003366;
+    }
+
+    ion-list {
+      width: 100%;
+    }
+
+    ion-item {
+      --background: #f9f9f9;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ion-button {
+      --background: #4caf50;
+      --color: #fff;
+      --border-radius: 5px;
+    }
+  }
 }

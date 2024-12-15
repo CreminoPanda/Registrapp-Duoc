@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AsignaturaService } from 'src/app/services/asignatura.service';
 import { Seccion } from 'src/app/interfaces/seccion';
 import Swal from 'sweetalert2';
@@ -21,6 +21,7 @@ export class CrearSeccionPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private asignaturaService: AsignaturaService
   ) {}
 
@@ -32,11 +33,12 @@ export class CrearSeccionPage implements OnInit {
       this.cargarProfesoresDisponibles();
     });
   }
+
   cargarProfesoresDisponibles() {
     this.asignaturaService
       .obtenerProfesoresAsignados(this.asignaturaId)
       .then((profesores) => {
-        console.log('Profesores disponibles:', profesores); // Agregar console.log
+        console.log('Profesores disponibles:', profesores);
         this.profesoresDisponibles = profesores;
       })
       .catch((error) => {
@@ -105,6 +107,8 @@ export class CrearSeccionPage implements OnInit {
         title: 'Error',
         text: 'Debe ingresar un nombre de sección y un número de cupos válido',
         icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false,
       });
       console.error(
         'Error: Nombre de sección vacío o número de cupos inválido'
@@ -117,6 +121,8 @@ export class CrearSeccionPage implements OnInit {
         title: 'Error',
         text: 'El número de alumnos seleccionados excede el número de cupos',
         icon: 'error',
+        confirmButtonText: 'OK',
+        heightAuto: false,
       });
       console.error(
         'Error: El número de alumnos seleccionados excede el número de cupos'
@@ -139,23 +145,28 @@ export class CrearSeccionPage implements OnInit {
         nuevaSeccion,
         this.profesorSeleccionado
       )
-      .then(() => {
-        Swal.fire({
+      .then(async () => {
+        await Swal.fire({
           title: 'Sección creada',
           text: 'La sección ha sido creada exitosamente',
           icon: 'success',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
         console.log('Sección creada exitosamente:', nuevaSeccion);
         this.nombreSeccion = '';
         this.cupos = 0;
         this.alumnosSeleccionados = [];
         this.cargarAlumnosNoAsignados();
+        this.router.navigate(['/admin-dashboard']);
       })
-      .catch((error) => {
-        Swal.fire({
+      .catch(async (error) => {
+        await Swal.fire({
           title: 'Error',
           text: 'Error al crear la sección',
           icon: 'error',
+          confirmButtonText: 'OK',
+          heightAuto: false,
         });
         console.error('Error al crear la sección:', error);
       });

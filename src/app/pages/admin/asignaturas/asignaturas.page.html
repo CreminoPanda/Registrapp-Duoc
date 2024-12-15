@@ -1,21 +1,29 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>asignaturas</ion-title>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Administrador</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">asignaturas</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-
-  <ion-button expand="full" routerLink="/listar-asignaturas">
-    Ver asignaturas
-  </ion-button>
-  <ion-button expand="full" routerLink="/crear-asignatura">
-    Crear Asignatura
-  </ion-button>
+<ion-content>
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Panel de Administración</strong>
+      <p>Gestiona los usuarios y asignaturas desde aquí</p>
+    </div>
+    <div class="banner">
+      <ion-button class="btn" expand="block" routerLink="/listar-asignaturas">
+        Ver asignaturas
+      </ion-button>
+    </div>
+    <div class="banner">
+      <ion-button expand="full" routerLink="/crear-asignatura">
+        Crear Asignatura
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

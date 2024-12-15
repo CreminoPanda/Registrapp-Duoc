@@ -15,8 +15,10 @@ export class GenerarQrPage implements OnInit, OnDestroy {
   seccionUid: string = '';
   alumnos: any[] = [];
   qrCode: string = '';
-  asistenciaUid: string = ''; // UID de la asistencia actual
+  asistenciaUid: string = '';
   asistenciaSubscription: Subscription | null = null;
+  claseTerminada: boolean = false;
+  nombreSeccion: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -47,22 +49,19 @@ export class GenerarQrPage implements OnInit, OnDestroy {
     this.asignaturaService
       .obtenerAlumnosPorSeccion(this.seccionUid)
       .then((alumnos: any[]) => {
-        // Mantener el estado de los alumnos si ya ha sido establecido
         this.alumnos = alumnos.map((alumno) => {
-          const alumnoExistente = this.alumnos.find(
-            (a) => a.uid === alumno.uid
-          );
           return {
             ...alumno,
-            presente: alumnoExistente
-              ? alumnoExistente.presente
-              : alumno.presente || false,
+            presente: false,
           };
         });
       });
   }
 
   suscribirseCambiosAsistencia() {
+    if (this.asistenciaSubscription) {
+      this.asistenciaSubscription.unsubscribe();
+    }
     this.asistenciaSubscription = this.firestore
       .collection('asistencias', (ref) =>
         ref.where('seccionUid', '==', this.seccionUid)
@@ -74,12 +73,18 @@ export class GenerarQrPage implements OnInit, OnDestroy {
           this.alumnos = Object.keys(asistencia.alumnos).map((uid) => ({
             uid,
             ...asistencia.alumnos[uid],
+            presente:
+              typeof asistencia.alumnos[uid].presente === 'boolean'
+                ? asistencia.alumnos[uid].presente
+                : false,
           }));
         }
       });
   }
 
   async generarQR() {
+    this.claseTerminada = false;
+
     const qrData = {
       seccionUid: this.seccionUid,
       asistenciaUid: this.asistenciaUid,
@@ -87,7 +92,7 @@ export class GenerarQrPage implements OnInit, OnDestroy {
     const qrContent = JSON.stringify(qrData);
     try {
       this.qrCode = await qrcode.toDataURL(qrContent);
-      this.guardarAsistencia(this.qrCode); // Guardar la asistencia al generar el QR
+      this.guardarAsistencia(this.qrCode);
     } catch (err) {
       console.error('Error al generar el QR:', err);
     }
@@ -97,8 +102,8 @@ export class GenerarQrPage implements OnInit, OnDestroy {
     const asistencia = {
       fecha: new Date(),
       seccionUid: this.seccionUid,
-      terminado: false, // Clase no terminada por defecto
-      qrCode: qrCode, // Guardar el QR generado
+      terminado: false,
+      qrCode: qrCode,
       alumnos: this.alumnos.reduce((acc, alumno) => {
         acc[alumno.uid] = {
           uid: alumno.uid,
@@ -113,8 +118,7 @@ export class GenerarQrPage implements OnInit, OnDestroy {
     this.asignaturaService
       .guardarAsistencia(asistencia)
       .then((docRef) => {
-        this.asistenciaUid = docRef.id; // Guardar el UID de la asistencia
-        // Actualizar el documento de asistencia con el UID
+        this.asistenciaUid = docRef.id;
         this.firestore
           .collection('asistencias')
           .doc(this.asistenciaUid)
@@ -154,11 +158,14 @@ export class GenerarQrPage implements OnInit, OnDestroy {
 
   async finalizarClase() {
     try {
-      await this.asignaturaService.finalizarClase(this.seccionUid);
       await this.firestore
         .collection('asistencias')
         .doc(this.asistenciaUid)
-        .update({ terminado: true }); // Actualizar el estado de terminado a true
+        .update({ terminado: true });
+      this.claseTerminada = true;
+      if (this.asistenciaSubscription) {
+        this.asistenciaSubscription.unsubscribe();
+      }
       await Swal.fire({
         title: 'Clase finalizada',
         text: 'La asistencia ha sido guardada exitosamente',
@@ -166,7 +173,7 @@ export class GenerarQrPage implements OnInit, OnDestroy {
         confirmButtonText: 'OK',
         heightAuto: false,
       });
-      this.router.navigate(['/invitado-profesor']); // Redirigir a la página de invitado-profesor
+      this.router.navigate(['/usuario-profesor']);
     } catch (error: any) {
       await Swal.fire({
         title: 'Error',
@@ -193,19 +200,23 @@ export class GenerarQrPage implements OnInit, OnDestroy {
           const asistenciaDoc = querySnapshot.docs[0];
           const asistencia = asistenciaDoc.data() as any;
           this.asistenciaUid = asistenciaDoc.id;
-          this.qrCode = asistencia.qrCode; // Recuperar el QR generado
+          this.qrCode = asistencia.qrCode;
 
           this.alumnos = Object.keys(asistencia.alumnos).map((uid) => ({
             uid,
             ...asistencia.alumnos[uid],
+            presente:
+              typeof asistencia.alumnos[uid].presente === 'boolean'
+                ? asistencia.alumnos[uid].presente
+                : false,
           }));
 
-          // Verificar el estado de cada alumno
           this.alumnos.forEach((alumno) => {
             console.log(`Estado del alumno ${alumno.uid}:`, alumno.presente);
           });
 
           if (asistencia.terminado) {
+            this.claseTerminada = true;
             Swal.fire({
               title: 'Clase finalizada',
               text: 'La clase ya ha sido finalizada.',
@@ -216,6 +227,21 @@ export class GenerarQrPage implements OnInit, OnDestroy {
           } else {
             console.log('Estado de asistencia recuperado exitosamente');
           }
+          this.firestore
+            .collection('secciones')
+            .doc(this.seccionUid)
+            .get()
+            .toPromise()
+            .then((seccionDoc) => {
+              if (seccionDoc && seccionDoc.exists) {
+                const seccion = seccionDoc.data() as any;
+                this.nombreSeccion = seccion.nombre;
+                console.log('Nombre de la sección:', this.nombreSeccion);
+              }
+            })
+            .catch((error) => {
+              console.error('Error al obtener el nombre de la sección:', error);
+            });
         }
       })
       .catch((error) => {

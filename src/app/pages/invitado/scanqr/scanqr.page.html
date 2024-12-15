@@ -5,19 +5,30 @@
 </ion-header>
 
 <ion-content>
-  <ion-button expand="full" (click)="scan()">Escanear QR</ion-button>
-  <div *ngIf="seccionUid">
-    <ion-list>
-      <ion-item>
-        <ion-label>
-          <h2>Asignatura: {{ asignatura.nombre }}</h2>
-          <h2>Profesor: {{ profesor.nombre }}</h2>
-          <h2>Sección: {{ seccion.nombre }}</h2>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-    <ion-button expand="full" (click)="marcarPresente()"
-      >Marcar Presente</ion-button
-    >
-  </div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Escanear QR</ion-card-title>
+      <ion-card-subtitle
+        >Escanea el código QR proporcionado por tu docente</ion-card-subtitle
+      >
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-button expand="full" (click)="scan()">Escanear QR</ion-button>
+      <div *ngIf="seccionUid">
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              <h2>Asignatura: {{ asignatura.nombre }}</h2>
+              <h2>Profesor: {{ profesor.nombre }}</h2>
+              <h2>Sección: {{ seccion.nombre }}</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-button expand="full" (click)="marcarPresente()"
+          >Marcar Presente</ion-button
+        >
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -1,15 +1,29 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Crear Asignatura</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <ion-item>
-    <ion-label position="floating">Nombre de la Asignatura</ion-label>
-    <ion-input [(ngModel)]="nombreAsignatura"></ion-input>
-  </ion-item>
-  <ion-button expand="full" (click)="crearAsignatura()"
-    >Crear Asignatura</ion-button
-  >
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Crear Asignatura</strong>
+      <p>Completa los detalles para crear una nueva asignatura</p>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label position="floating">Nombre de la Asignatura</ion-label>
+        <ion-input [(ngModel)]="nombreAsignatura"></ion-input>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-button expand="full" (click)="crearAsignatura()">
+        Crear Asignatura
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

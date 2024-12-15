@@ -1,33 +1,50 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/admin-dashboard">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Asignar Asignatura</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label>Seleccionar Asignatura</ion-label>
-    <ion-select [(ngModel)]="asignaturaSeleccionada">
-      <ion-select-option
-        *ngFor="let asignatura of asignaturas"
-        [value]="asignatura.uid"
-      >
-        {{ asignatura.nombre }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Seleccionar Profesor</ion-label>
-    <ion-select [(ngModel)]="profesorSeleccionado">
-      <ion-select-option
-        *ngFor="let profesor of profesores"
-        [value]="profesor.uid"
-      >
-        {{ profesor.nombre }} {{ profesor.apellido }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-button expand="full" (click)="asignarAsignatura()"
-    >Asignar Asignatura</ion-button
-  >
+  <div class="content-wrapper">
+    <div class="intro">
+      <strong>Asignar Asignatura</strong>
+      <p>Selecciona la asignatura y el profesor para asignar</p>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label>Seleccionar Asignatura</ion-label>
+        <ion-select [(ngModel)]="asignaturaSeleccionada">
+          <ion-select-option
+            *ngFor="let asignatura of asignaturas"
+            [value]="asignatura.uid"
+          >
+            {{ asignatura.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-item>
+        <ion-label>Seleccionar Profesor</ion-label>
+        <ion-select [(ngModel)]="profesorSeleccionado">
+          <ion-select-option
+            *ngFor="let profesor of profesores"
+            [value]="profesor.uid"
+          >
+            {{ profesor.nombre }} {{ profesor.apellido }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="banner">
+      <ion-button expand="full" (click)="asignarAsignatura()">
+        Asignar Asignatura
+      </ion-button>
+    </div>
+  </div>
 </ion-content>
