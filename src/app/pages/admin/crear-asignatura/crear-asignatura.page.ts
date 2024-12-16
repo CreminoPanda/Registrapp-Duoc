@@ -58,7 +58,7 @@ export class CrearAsignaturaPage implements OnInit {
           confirmButtonText: 'OK',
           heightAuto: false,
         });
-        this.nombreAsignatura = ''; // Limpiar el campo después de crear la asignatura
+        this.nombreAsignatura = '';
       })
       .catch((error: any) => {
         Swal.fire({
